@@ -4,8 +4,20 @@
 <meta charset="utf-8">
 <title>Crypto Cow</title>
 <link rel="stylesheet" href="css/style.css">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
 </head>
 <body>
+
+<div id="overlay">
+  <div id="osd-bl">
+    <div id="dispContractAddress">Contract: <a id="contractAddress" href="#">...</a></div>
+  </div>
+
+  <div id="osd-br">
+    <div id="dispWalletAddress">Wallet: <span id="walletAddress">...</span></div>
+    <div id="dispTokenBalance"><span id="tokenBalance">0.00</span> COW</div>
+  </div>
+</div>
 
 <script src="dist/app.js"></script>
 </body>
