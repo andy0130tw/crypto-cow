@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Crypto Cow</title>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/material-components-web.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+</head>
+<body>
+
+<aside class="mdc-drawer mdc-drawer--temporary mdc-typography">
+  <nav class="mdc-drawer__drawer">
+    <!--<header class="mdc-drawer__header">
+      <div class="mdc-drawer__header-content">
+        header here
+      </div>
+    </header>-->
+    <nav id="icon-with-text-demo" class="mdc-drawer__content mdc-list--two-line">
+      <a class="mdc-list-item" href="#">
+        <i class="material-icons mdc-list-item__graphic" aria-hidden="true">add_shopping_cart</i><span class="mdc-list-item__text">買牛牛</span>
+      </a>
+      <a class="mdc-list-item" href="#">
+        <i class="material-icons mdc-list-item__graphic" aria-hidden="true">remove_shopping_cart</i><span class="mdc-list-item__text">賣牛牛</span>
+      </a>
+      <a class="mdc-list-item" href="#">
+        <i class="material-icons mdc-list-item__graphic" aria-hidden="true">whatshot</i><span class="mdc-list-item__text">犧牲牛牛</span>
+      </a>
+    </nav>
+  </nav>
+</aside>
+
+<div id="overlay">
+  <button id="menuButton" class="mdc-icon-button material-icons">menu</button>
+
+  <div id="osd-bl">
+    <div id="dispContractAddress"><a id="contractAddress" href="#">Contract on EtherScan</a></div>
+  </div>
+
+  <div id="osd-br">
+    <div id="dispWalletAddress">Wallet: <span id="walletAddress">...</span></div>
+    <div id="dispTokenBalance"><span id="tokenBalance">0.00</span> COW</div>
+  </div>
+</div>
+
+<script src="dist/app.js"></script>
+</body>
+</html>
