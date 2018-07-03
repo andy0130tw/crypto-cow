@@ -26,6 +26,14 @@ body {
     font-family: 'Fira Sans';
 }
 
+#menuButton {
+    position: fixed;
+    top: 0;
+    left: 0;
+    transform: scale(1.5);
+    transform-origin: top left;
+}
+
 #overlay {
     position: absolute;
     top: 0;
