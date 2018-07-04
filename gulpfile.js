@@ -1,4 +1,5 @@
 const fs = require('fs');
+const path = require('path');
 
 const gulp = require('gulp');
 const tfilter = require('tfilter');
@@ -9,6 +10,8 @@ const browserify = require('browserify');
 const babelify = require('babelify');
 const chalk = require('chalk');
 
+let appRootPath = path.join(__dirname);
+
 gulp.task('build', () => {
  let b = browserify({
     entries: 'src/js/script.js',
@@ -18,7 +21,9 @@ gulp.task('build', () => {
     debug: true
   })
     .transform(babelify)
-    .transform(tfilter(babelify, {include: '**/node_modules/@material/**/*.js'}), {
+    .transform(tfilter(babelify, {
+        include: path.join(appRootPath, '/node_modules/@material/**/*.js')
+    }), {
       global: true
     })
     // .transform('uglifyify', { global: true });  // when in production

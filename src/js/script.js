@@ -163,7 +163,9 @@ function assetsLoaded() {
 
       let elemWalletAddress = document.getElementById('walletAddress');
       web3.eth.defaultAccount = accList[0];
-      elemWalletAddress.textContent = web3.eth.defaultAccount;
+
+      let accountTruncator = s => s.slice(0, 10) + '…' + s.slice(-8);
+      elemWalletAddress.textContent = accountTruncator(web3.eth.defaultAccount);
 
       let accChangeWatcher = setInterval(() => {
         web3.eth.getAccounts().then(acc => {
@@ -191,10 +193,15 @@ function assetsLoaded() {
       let tokBalFraction = tokBalInDecimal - renderingCows;
 
       if (!renderingCows) {
+        let textScale = 1;
+        if (window.innerWidth < 800) {
+          textScale = 0.6;
+        }
+
         let tStyle = new PIXI.TextStyle({
           fontFamily: 'Roboto',
           fontWeight: 'bold',
-          fontSize: 72,
+          fontSize: 72 * textScale,
           align: 'center',
           wordWrap: true,
           wordWrapWidth: window.innerWidth
