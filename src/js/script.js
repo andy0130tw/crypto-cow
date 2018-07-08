@@ -1,13 +1,11 @@
 import * as PIXI from 'pixi.js';
-import Web3 from 'web3';
 import CountUp from 'countup.js';
 
 import ui from './ui';
 import utils from './utils';
+import { addrContract } from './constants';
 
-let addrContract = '0x6c936dadc3b31f66227922f759dcc298f7725c06';
-
-let app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x1099bb });
+let app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x7AC654 });
 
 document.body.appendChild(app.view);
 
@@ -119,8 +117,7 @@ function assetsLoaded() {
     return;
   }
 
-  const web3 = new Web3();
-  web3.setProvider(ethProvider);
+  const web3 = utils.getWeb3Instance();
 
   web3.eth.net.getId()
     .then(netId => {
@@ -133,8 +130,6 @@ function assetsLoaded() {
       }
     })
     .then(([netId, netName]) => {
-      console.log(netId, netName);
-
       if (netId != 4) {  // Rinkeby
         let richText = new PIXI.Text(`The contract is deployed on Rinkeby, \nbut you are now on: ${netName}.\n \nPlease switch to Rinkeby and refresh.`, textStyleFatal);
 
@@ -149,7 +144,6 @@ function assetsLoaded() {
       return web3.eth.getAccounts();
     })
     .then(accList => {
-      console.log(accList);
       if (accList[0] == null) {
         let richText = new PIXI.Text('No wallet address detected.\nYou may need to unlock your account, and refresh.', textStyleFatal);
 
@@ -178,10 +172,7 @@ function assetsLoaded() {
         });
       }, 500);
 
-      return utils.getABI()
-        .then(abi => {
-          return new web3.eth.Contract(abi, addrContract);
-        });
+      return utils.getContract(addrContract);
     })
     .then(contract => {
       return contract.methods.balanceOf(web3.eth.defaultAccount).call();
