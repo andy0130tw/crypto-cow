@@ -2,15 +2,6 @@ html {
     box-sizing: border-box;
 }
 
-@media screen and (max-width: 800px) {
-  html {
-    font-size: 14px;
-  }
-  #dispTokenBalance {
-    margin-bottom: 1rem !important;
-  }
-}
-
 * {
     box-sizing: inherit;
 }
@@ -80,12 +71,12 @@ body {
     font-size: 5.3rem;
 }
 
-#buySellEthField {
-  max-width: 220px;
+.--buySellEthField {
+  max-width: 10em;
 }
 
-#buySellCowField {
-  max-width: 220px;
+.--buySellCowField {
+  max-width: 10em;
 }
 
 button.mdc-button.mdc-button--_big {
@@ -101,4 +92,20 @@ button.mdc-button.mdc-button--_big {
 .mdc-drawer__header {
   background-image: linear-gradient(0deg, rgba(0,0,0,.7), rgba(0,0,0,.15) 3em), url(../assets/grass.jpg);
   background-size: contain;
+}
+
+.break-on-small-screen {
+  display: none;
+}
+
+@media screen and (max-width: 800px) {
+  html {
+    font-size: 14px;
+  }
+  #dispTokenBalance {
+    margin-bottom: 1rem !important;
+  }
+  .break-on-small-screen {
+    display: inline;
+  }
 }

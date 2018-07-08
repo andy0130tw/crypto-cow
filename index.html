@@ -25,7 +25,7 @@
         <span class="material-icons mdc-list-item__graphic" aria-hidden="true">remove_shopping_cart</span><span class="mdc-list-item__text">賣牛牛<span class="mdc-list-item__secondary-text">即將推出</span></span>
       </a>
       <a id="menuSacrifice" class="mdc-list-item" href="#">
-        <span class="material-icons mdc-list-item__graphic" aria-hidden="true">whatshot</span><span class="mdc-list-item__text">犧牲牛牛<span class="mdc-list-item__secondary-text">即將推出</span></span>
+        <span class="material-icons mdc-list-item__graphic" aria-hidden="true">whatshot</span><span class="mdc-list-item__text">獻祭牛牛<span class="mdc-list-item__secondary-text">即將推出</span></span>
       </a>
     </nav>
   </nav>
@@ -56,29 +56,45 @@
       </h2>
     </header>
     <section id="my-mdc-dialog-description" class="mdc-dialog__body">
-        <div class="mdc-typography--headline5">
-        用
-        <div id="buySellEthWrapper" class="mdc-text-field mdc-text-field--box mdc-text-field--with-trailing-icon">
-          <input type="text" id="buySellEthField" class="mdc-text-field__input mdc-typography--headline5">
-          <div class="mdc-line-ripple"></div>
-          <span class="material-icons mdc-text-field__icon">lock</span>
+        <div id="buyCowFragment" class="mdc-typography--headline5">
+          以
+          <div class="--buySellEthWrapper mdc-text-field mdc-text-field--box">
+            <input type="text" class="--buySellEthField mdc-text-field__input mdc-typography--headline5">
+            <div class="mdc-line-ripple"></div>
+          </div>
+          ETH<br class="break-on-small-screen"><!--
+          --> 買入
+          <div class="--buySellCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--with-trailing-icon">
+            <input type="text" class="--buySellCowField mdc-text-field__input mdc-typography--headline5" value="0" readonly>
+            <div class="mdc-line-ripple"></div>
+            <span class="material-icons mdc-text-field__icon">lock</span>
+          </div>
+          COW
         </div>
-        eth 買
-        <div id="buySellCowWrapper" class="mdc-text-field mdc-text-field--box mdc-text-field--with-trailing-icon">
-          <input type="text" id="buySellCowField" class="mdc-text-field__input mdc-typography--headline5">
-          <div class="mdc-line-ripple"></div>
-          <span class="material-icons mdc-text-field__icon">lock_open</span>
-        </div>
-        隻牛 (COW)
+
+        <div id="sellCowFragment" class="mdc-typography--headline5" style="display: none;">
+          賣出
+          <div class="--buySellCowWrapper mdc-text-field mdc-text-field--box">
+            <input type="text" class="--buySellCowField mdc-text-field__input mdc-typography--headline5">
+            <div class="mdc-line-ripple"></div>
+          </div>
+          COW<br class="break-on-small-screen"><!--
+          -->，獲得
+          <div class="--buySellEthWrapper mdc-text-field mdc-text-field--box mdc-text-field--with-trailing-icon">
+            <input type="text" class="--buySellEthField mdc-text-field__input mdc-typography--headline5" value="0" readonly>
+            <div class="mdc-line-ripple"></div>
+            <span class="material-icons mdc-text-field__icon">lock</span>
+          </div>
+          ETH
         </div>
 
         <div style="padding-top: 16px">
-          目前買入價格： 1 eth = ??? COW，目前賣出價格： 1 COW = ???eth
+          參考買入價格： 0.1 ETH = <span id="priceBuyInEth">???</span> COW，目前賣出價格： 1 COW = <span id="priceSellInEth">???</span> ETH
         </div>
     </section>
     <footer class="mdc-dialog__footer">
       <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__footer__button mdc-dialog__footer__button--cancel">關閉</button>
-      <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-button--raised mdc-dialog__footer__button mdc-dialog__footer__button--accept">送出交易</button>
+      <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__footer__button mdc-dialog__footer__button--accept mdc-button--raised" style="font-weight: bold">送出交易</button>
     </footer>
   </div>
   <div class="mdc-dialog__backdrop"></div>
