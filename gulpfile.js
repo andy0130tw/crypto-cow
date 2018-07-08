@@ -51,7 +51,7 @@ gulp.task('debug', () => {
   b.on('log', log => {
     console.log(`[${chalk.green('watchify')}] ${chalk.bold('Build success')}: ${chalk.green(log)}`);
   });
-  b.on('update', bundle);
+  b.on('update', () => bundle(b));
   return bundle(b);
 });
 

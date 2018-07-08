@@ -3,8 +3,9 @@ import CountUp from 'countup.js';
 
 import ui from './ui';
 import utils from './utils';
-import { addrContract } from './constants';
+import { addrContract, etherScanDomain } from './constants';
 
+PIXI.utils.skipHello();
 let app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x7AC654 });
 
 document.body.appendChild(app.view);
@@ -81,7 +82,7 @@ function assetsLoaded() {
   }
 
   let elemContractAddress = document.getElementById('contractAddress');
-  elemContractAddress.href = `https://rinkeby.etherscan.io/address/${addrContract}`;
+  elemContractAddress.href = `https://${etherScanDomain}/address/${addrContract}`;
 
   const ethProvider = utils.getMetaMaskProvider();
 
@@ -184,6 +185,9 @@ function assetsLoaded() {
       let tokBalFraction = tokBalInDecimal - renderingCows;
 
       if (!renderingCows) {
+        // give 3 free cows for previewing
+        renderingCows = 3.0;
+
         let textScale = 1;
         if (window.innerWidth < 800) {
           textScale = 0.6;
@@ -197,8 +201,8 @@ function assetsLoaded() {
           wordWrap: true,
           wordWrapWidth: window.innerWidth
         });
-        let richText = new PIXI.Text('You have no cows :(\nGo get some tokens!\n(We gave you three free ones for previewing)', tStyle);
 
+        let richText = new PIXI.Text('You have no cows :(\nGo get some tokens!\n(We gave you three free ones for previewing)', tStyle);
         richText.alpha = 0.2;
         richText.x = app.screen.width / 2;
         richText.y = app.screen.height / 2;
@@ -206,8 +210,6 @@ function assetsLoaded() {
         topStage.addChild(richText);
       }
 
-      // DEBUG: add 3 free cows
-      renderingCows += 3;
 
       // capped at 300
       if (tokBalInDecimal > 300) {

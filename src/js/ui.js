@@ -2,9 +2,11 @@ import {MDCTemporaryDrawer} from '@material/drawer';
 import {MDCRipple}          from '@material/ripple';
 import {MDCDialog}          from '@material/dialog';
 import {MDCTextField}       from '@material/textfield';
+import {MDCSnackbar}        from '@material/snackbar';
 
 import watcher from './watcher';
 import utils from './utils';
+import { addrContract, etherScanDomain } from './constants';
 
 let web3 = utils.getWeb3Instance();
 
@@ -21,15 +23,20 @@ menuButton.addEventListener('click', () => {
   drawer.open = true;
 });
 
+const snackbar = new MDCSnackbar(document.getElementById('my-mdc-snackbar'));
+snackbar.dismissesOnAction = false;
+
 let buySellStateIsBuy = true;
 
 const buyCowFragment = document.getElementById('buyCowFragment');
 const buyEthWrapper = new MDCTextField(buyCowFragment.querySelector('.--buySellEthWrapper'));
 const buyCowWrapper = new MDCTextField(buyCowFragment.querySelector('.--buySellCowWrapper'));
+const buyCowAmountField = buyCowFragment.querySelector('.--buySellEthField');
 
 const sellCowFragment = document.getElementById('sellCowFragment');
 const sellEthWrapper = new MDCTextField(sellCowFragment.querySelector('.--buySellEthWrapper'));
 const sellCowWrapper = new MDCTextField(sellCowFragment.querySelector('.--buySellCowWrapper'));
+const sellCowAmountField = sellCowFragment.querySelector('.--buySellCowField');
 
 function updateDialogContent() {
   if (buySellStateIsBuy) {
@@ -43,20 +50,33 @@ function updateDialogContent() {
   }
 }
 
+function updateBuySellPrice() {
+  return Promise.all([
+    watcher.getBuyPrice(web3.utils.toWei('0.1')),
+    watcher.getSellPrice(web3.utils.toWei('1'))
+  ])
+    .then(([buyPrice, sellPrice]) => {
+      document.getElementById('priceBuyInEth').textContent = (parseFloat(buyPrice)).toFixed(6);
+      document.getElementById('priceSellInEth').textContent = (parseFloat(sellPrice)).toFixed(6);
+    });
+}
+
 document.getElementById('menuBuy').addEventListener('click', () => {
   buySellStateIsBuy = true;
   updateDialogContent();
   buySellDialog.show();
+  updateBuySellPrice();
 });
 
 document.getElementById('menuSell').addEventListener('click', () => {
   buySellStateIsBuy = false;
   updateDialogContent();
   buySellDialog.show();
+  updateBuySellPrice();
 });
 
 ['propertychange', 'change', 'click', 'keyup', 'input', 'paste'].forEach(evtName => {
-  buyCowFragment.querySelector('.--buySellEthField').addEventListener(evtName, evt => {
+  buyCowAmountField.addEventListener(evtName, evt => {
     if (!evt.target.value) return;
     try {
       let value = web3.utils.toWei(evt.target.value);
@@ -67,7 +87,7 @@ document.getElementById('menuSell').addEventListener('click', () => {
       console.log(err);
     }
   });
-  sellCowFragment.querySelector('.--buySellCowField').addEventListener(evtName, evt => {
+  sellCowAmountField.addEventListener(evtName, evt => {
     if (!evt.target.value) return;
     try {
       let value = web3.utils.toWei(evt.target.value);
@@ -82,20 +102,42 @@ document.getElementById('menuSell').addEventListener('click', () => {
 
 buySellDialog.listen('MDCDialog:accept', () => {
   if (buySellStateIsBuy) {
-    //
+    web3.eth.sendTransaction({
+      from: web3.eth.defaultAccount,
+      to: addrContract,
+      value: web3.utils.toWei(buyCowAmountField.value)
+    }).on('transactionHash', hash => {
+      drawer.open = false;
+      snackbar.show({
+        message: '交易成功，正在等待上鏈',
+        actionText: '在 EtherScan 上查看',
+        timeout: 15000,
+        actionHandler: () => {
+          window.open(`https://${etherScanDomain}/tx/${hash}`);
+        }
+      });
+    });
   } else {
-    //
+    let contract = utils.getContract(addrContract)
+      .then(contract => {
+        let amount = web3.utils.toWei(sellCowAmountField.value);
+        // XXX: should be modified to camel case in contract + ABI
+        contract.methods.selltoken(amount).send({
+          from: web3.eth.defaultAccount
+        }).on('transactionHash', hash => {
+          drawer.open = false;
+          snackbar.show({
+            message: '交易成功，正在等待上鏈',
+            actionText: '在 EtherScan 上查看',
+            timeout: 15000,
+            actionHandler: () => {
+              window.open(`https://${etherScanDomain}/tx/${hash}`);
+            }
+          });
+        });
+      });
   }
 });
-
-Promise.all([
-  watcher.getBuyPrice(web3.utils.toWei('0.1')),
-  watcher.getSellPrice(web3.utils.toWei('1'))
-])
-  .then(([buyPrice, sellPrice]) => {
-    document.getElementById('priceBuyInEth').textContent = (parseFloat(buyPrice)).toFixed(6);
-    document.getElementById('priceSellInEth').textContent = (parseFloat(sellPrice)).toFixed(6);
-  });
 
 export default {
   drawer,
