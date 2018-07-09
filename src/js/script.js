@@ -3,7 +3,7 @@ import CountUp from 'countup.js';
 
 import ui from './ui';
 import utils from './utils';
-import { addrContract, etherScanDomain } from './constants';
+import { addrContract, etherscanDomain } from './constants';
 
 PIXI.utils.skipHello();
 let app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x7AC654 });
@@ -82,7 +82,7 @@ function assetsLoaded() {
   }
 
   let elemContractAddress = document.getElementById('contractAddress');
-  elemContractAddress.href = `https://${etherScanDomain}/address/${addrContract}`;
+  elemContractAddress.href = `https://${etherscanDomain}/address/${addrContract}`;
 
   const ethProvider = utils.getMetaMaskProvider();
 

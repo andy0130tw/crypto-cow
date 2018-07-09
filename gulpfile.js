@@ -57,7 +57,12 @@ gulp.task('debug', () => {
 
 gulp.task('build', () => {
   let b = getBrowserifyBase(false);
-  b = b.transform('uglifyify', { global: true });  // when in production
+  return b.bundle()
+    .pipe(source('app.js'))
+    .pipe(buffer())
+    .pipe(require('gulp-uglify')())
+    .pipe(gulp.dest('./src/dist'));
+
   return bundle(b);
 });
 

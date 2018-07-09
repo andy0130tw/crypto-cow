@@ -6,7 +6,7 @@ import {MDCSnackbar}        from '@material/snackbar';
 
 import watcher from './watcher';
 import utils from './utils';
-import { addrContract, etherScanDomain } from './constants';
+import { addrContract, etherscanDomain } from './constants';
 
 let web3 = utils.getWeb3Instance();
 
@@ -77,22 +77,30 @@ document.getElementById('menuSell').addEventListener('click', () => {
 
 ['propertychange', 'change', 'click', 'keyup', 'input', 'paste'].forEach(evtName => {
   buyCowAmountField.addEventListener(evtName, evt => {
-    if (!evt.target.value) return;
+    let resultField = buyCowFragment.querySelector('.--buySellCowField');
+    if (evt.target.value === '') {
+      resultField.value = '0';
+      return;
+    }
     try {
       let value = web3.utils.toWei(evt.target.value);
       watcher.getBuyPrice(value).then(price => {
-        buyCowFragment.querySelector('.--buySellCowField').value = parseFloat(price).toFixed(6);
+        resultField.value = parseFloat(price).toFixed(6);
       });
     } catch (err) {
       console.log(err);
     }
   });
   sellCowAmountField.addEventListener(evtName, evt => {
-    if (!evt.target.value) return;
+    let resultField = sellCowFragment.querySelector('.--buySellEthField');
+    if (evt.target.value === '') {
+      resultField.value = '0';
+      return;
+    }
     try {
       let value = web3.utils.toWei(evt.target.value);
       watcher.getSellPrice(value).then(price => {
-        sellCowFragment.querySelector('.--buySellEthField').value = parseFloat(price).toFixed(6);
+        resultField.value = parseFloat(price).toFixed(6);
       });
     } catch (err) {
       console.log(err);
@@ -110,10 +118,11 @@ buySellDialog.listen('MDCDialog:accept', () => {
       drawer.open = false;
       snackbar.show({
         message: '交易成功，正在等待上鏈',
-        actionText: '在 EtherScan 上查看',
+        actionText: '在 Etherscan 上查看',
         timeout: 15000,
+        multiline: true,
         actionHandler: () => {
-          window.open(`https://${etherScanDomain}/tx/${hash}`);
+          window.open(`https://${etherscanDomain}/tx/${hash}`);
         }
       });
     });
@@ -128,10 +137,11 @@ buySellDialog.listen('MDCDialog:accept', () => {
           drawer.open = false;
           snackbar.show({
             message: '交易成功，正在等待上鏈',
-            actionText: '在 EtherScan 上查看',
+            actionText: '在 Etherscan 上查看',
             timeout: 15000,
+            multiline: true,
             actionHandler: () => {
-              window.open(`https://${etherScanDomain}/tx/${hash}`);
+              window.open(`https://${etherscanDomain}/tx/${hash}`);
             }
           });
         });

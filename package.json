@@ -23,6 +23,7 @@
     "chalk": "^2.4.1",
     "countup.js": "^1.9.3",
     "gulp": "^3.9.1",
+    "gulp-uglify": "^3.0.0",
     "pixi.js": "^4.8.1",
     "tfilter": "^1.0.1",
     "tinyify": "^2.4.3",
