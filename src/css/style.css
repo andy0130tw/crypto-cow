@@ -13,7 +13,7 @@ body {
     font-size: 1rem;
     line-height: 1.3;
 
-    font-family: 'Fira Sans';
+    font-family: 'Fira Sans', Roboto, sans-serif;
 }
 
 #menuButton {
@@ -51,6 +51,7 @@ body {
 }
 
 #walletAddress {
+    background-color: rgba(255, 255, 255, .4);
     font-size: 1.2rem;
 }
 
@@ -69,6 +70,10 @@ body {
 #tokenBalance {
     font-weight: 500;
     font-size: 5.3rem;
+}
+
+#tokenSymbol {
+  font-family: Philosopher, 'Fira Sans', Roboto, sans-serif;
 }
 
 .--buySellEthField {
@@ -96,6 +101,18 @@ button.mdc-button.mdc-button--_big {
 
 .break-on-small-screen {
   display: none;
+}
+
+body.complete .show-when-loading,
+body.loading .hide-when-loading {
+  display: none;
+}
+
+#loading-text {
+  color: rgba(0, 0, 0, .7);
+  font-family: Philosopher, 'Fira Sans', Roboto, sans-serif;
+  font-size: 4rem;
+  font-weight: 500;
 }
 
 @media screen and (max-width: 800px) {

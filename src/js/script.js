@@ -1,5 +1,6 @@
 import * as PIXI from 'pixi.js';
 import CountUp from 'countup.js';
+import FontFaceObserver from 'fontfaceobserver';
 
 import ui from './ui';
 import utils from './utils';
@@ -92,9 +93,9 @@ function assetsLoaded() {
   }
 
   let textStyleFatal = new PIXI.TextStyle({
-      fontFamily: 'Roboto Slab',
+      fontFamily: 'Philosopher, Roboto, Helvetica, sans-serif',
       fontSize: 64 * textScale,
-      fill: ['#ffffff', '#ff6666'], // gradient
+      fill: ['#f1f2f3', '#ff8a80'], // gradient
       stroke: '#222',
       align: 'center',
       strokeThickness: 5 * textScale,
@@ -106,6 +107,10 @@ function assetsLoaded() {
       wordWrap: true,
       wordWrapWidth: window.innerWidth
     });
+
+  // loading phase ends
+  document.body.classList.remove('loading');
+  document.body.classList.add('complete');
 
   if (ethProvider == null) {
     let richText = new PIXI.Text('No Web3 detected.\nYou should install MetaMask to see cows!', textStyleFatal);
@@ -194,7 +199,7 @@ function assetsLoaded() {
         }
 
         let tStyle = new PIXI.TextStyle({
-          fontFamily: 'Roboto',
+          fontFamily: 'Roboto, Helvetica, sans-serif',
           fontWeight: 'bold',
           fontSize: 72 * textScale,
           align: 'center',
@@ -262,11 +267,24 @@ function assetsLoaded() {
     .catch(err => console.log(err));
 }
 
-PIXI.loader
-  .add('cow-2', 'assets/cow-2.png')
-  .add('cow-3', 'assets/cow-3.png')
-  .add('cow-4', 'assets/cow-4.png')
-  .load(assetsLoaded);
+let fontLoaderPromises = [
+  ['Philosopher', null, 2000],
+  ['Fira Sans', null, 2000]
+].map(([s, opt, t]) => ((new FontFaceObserver(s)).load(opt, t)));
+
+
+Promise.all(fontLoaderPromises)
+.catch(fontspec => {
+  // ignore the error, actually
+  console.warn(`Failed to load webfont "${fontspec.family}" in time:`, fontspec);
+})
+.then(() => {
+  PIXI.loader
+    .add('cow-2', 'assets/cow-2.png')
+    .add('cow-3', 'assets/cow-3.png')
+    .add('cow-4', 'assets/cow-4.png')
+    .load(assetsLoaded);
+});
 
 let stageLoader = new PIXI.loaders.Loader();
 

@@ -2,20 +2,21 @@
 <html>
 <head>
 <meta charset="utf-8">
-<title>Crypto Cow</title>
+<title>CryptoCow</title>
 <link rel="icon" type="image/png" href="assets/icon.png">
 <link rel="stylesheet" href="css/style.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans:400,500,700|Philosopher">
 <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
 <link rel="stylesheet" href="css/material-components-web.min.css">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
 <meta property="og:type" content="website">
-<meta property="og:title" content="Crypto Cow">
+<meta property="og:title" content="CryptoCow：區塊牛">
 <meta property="og:url" content="https://cryptocow.app/">
 <meta property="og:image" content="https://cryptocow.app/assets/cow-1.png">
-<meta property="og:description" content="加密牛">
+<meta property="og:description" content="區塊牛：牛有四個胃，區塊牛也有。為了幫你消化難解的區塊鏈新知而生。是為消化系區塊鏈資訊共筆平台。">
+<meta property="fb:app_id" content="444583839381206">
 </head>
-<body class="mdc-typography">
+<body class="mdc-typography loading">
 
 <aside class="mdc-drawer mdc-drawer--temporary mdc-typography">
   <nav class="mdc-drawer__drawer">
@@ -24,16 +25,29 @@
         <span id="appTitle" class="mdc-typography--headline4">CryptoCow</span>
       </div>
     </header>
-    <nav id="icon-with-text-demo" class="mdc-drawer__content mdc-list--two-line mdc-list--avatar-list">
-      <a id="menuBuy" class="mdc-list-item" href="#">
-        <span class="material-icons mdc-list-item__graphic" aria-hidden="true">add_shopping_cart</span><span class="mdc-list-item__text">買牛牛</span>
-      </a>
-      <a id="menuSell" class="mdc-list-item" href="#">
-        <span class="material-icons mdc-list-item__graphic" aria-hidden="true">remove_shopping_cart</span><span class="mdc-list-item__text">賣牛牛</span>
-      </a>
-      <a id="menuSacrifice" class="mdc-list-item" href="#">
-        <span class="material-icons mdc-list-item__graphic" aria-hidden="true">whatshot</span><span class="mdc-list-item__text">獻祭牛牛<span class="mdc-list-item__secondary-text">即將推出</span></span>
-      </a>
+    <nav id="icon-with-text-demo" class="mdc-drawer__content mdc-list-group">
+      <div class="mdc-list mdc-list--two-line mdc-list--avatar-list">
+        <a id="menuBuy" class="mdc-list-item" href="#">
+          <span class="material-icons mdc-list-item__graphic" aria-hidden="true">add_shopping_cart</span><span class="mdc-list-item__text">買牛牛</span>
+        </a>
+        <a id="menuSell" class="mdc-list-item" href="#">
+          <span class="material-icons mdc-list-item__graphic" aria-hidden="true">remove_shopping_cart</span><span class="mdc-list-item__text">賣牛牛</span>
+        </a>
+        <a id="menuSacrifice" class="mdc-list-item" href="#">
+          <span class="material-icons mdc-list-item__graphic" aria-hidden="true">whatshot</span><span class="mdc-list-item__text">獻祭牛牛<span class="mdc-list-item__secondary-text">即將推出</span></span>
+        </a>
+      </div>
+
+      <hr class="mdc-list-divider">
+
+      <div class="mdc-list mdc-list--avatar-list">
+        <a class="mdc-list-item" href="https://www.facebook.com/cryptocowapp/" target="_blank">
+          <span class="mdc-list-item__graphic" aria-hidden="true"><img src="https://www.gstatic.com/images/icons/material/system/2x/post_facebook_black_24dp.png" width="24"></span><span class="mdc-list-item__text">Facebook 粉專</span>
+        </a>
+        <a class="mdc-list-item" href="https://medium.com/cryptocow" target="_blank">
+          <span class="mdc-list-item__graphic" aria-hidden="true"><img src="https://cdn-images-1.medium.com/fit/c/60/60/1*8I-HPL0bfoIzGied-dzOvA.png" width="24"></span><span class="mdc-list-item__text">Medium</span>
+        </a>
+      </div>
     </nav>
   </nav>
 </aside>
@@ -46,8 +60,9 @@
   </div>
 
   <div id="osd-br">
-    <div id="dispWalletAddress">Wallet: <span id="walletAddress">...</span></div>
-    <div id="dispTokenBalance"><span id="tokenBalance">0.00</span> COW</div>
+    <div id="loading-text" class="show-when-loading">Loading...</div>
+    <div id="dispWalletAddress" class="hide-when-loading">Wallet: <span id="walletAddress">...</span></div>
+    <div id="dispTokenBalance" class="hide-when-loading"><span id="tokenBalance">0.00</span> <span id="tokenSymbol">COW</span></div>
   </div>
 </div>
 
