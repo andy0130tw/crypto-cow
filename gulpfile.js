@@ -5,8 +5,8 @@ const gulp = require('gulp');
 const tfilter = require('tfilter');
 const source = require('vinyl-source-stream');
 const buffer = require('vinyl-buffer');
-const watchify = require('watchify');
 const browserify = require('browserify');
+const watchify = require('watchify');
 const babelify = require('babelify');
 const chalk = require('chalk');
 
@@ -18,16 +18,16 @@ function getBrowserifyBase(debug) {
     plugin.push(watchify);
   }
 
-  return browserify({
+  let config = Object.assign({
     entries: 'src/js/script.js',
-    cache: {},
-    packageCache: {},
     plugin: plugin,
     debug: debug
-  })
+  }, watchify.args);
+
+  return browserify(config)
     .transform(babelify)
     .transform(tfilter(babelify, {
-        include: path.join(appRootPath, '/node_modules/@material/**/*.js')
+      include: path.join(appRootPath, '/node_modules/@material/**/*.js')
     }), {
       global: true
     });
