@@ -1,2 +1,2 @@
-export const addrContract = '0x6c936dadc3b31f66227922f759dcc298f7725c06';
-export const etherscanDomain = 'rinkeby.etherscan.io';
+export const addrContract = '0xFDb0065240753FEF4880a9CC7876be59E09D78BB';
+export const etherscanDomain = 'etherscan.io';

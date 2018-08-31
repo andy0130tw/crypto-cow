@@ -93,15 +93,18 @@ function assetsLoaded() {
   }
 
   let textStyleFatal = new PIXI.TextStyle({
-      fontFamily: 'Philosopher, Roboto, Helvetica, sans-serif',
+      fontFamily: 'Philosopher, -apple-system, Roboto, Helvetica, sans-serif',
       fontSize: 64 * textScale,
       fill: ['#f1f2f3', '#ff8a80'], // gradient
       stroke: '#222',
+      lineJoin: 'bevel',
+      lineHeight: 90 * textScale,
+      fillGradientStops: [0.29, 0.71],
       align: 'center',
       strokeThickness: 5 * textScale,
       dropShadow: true,
-      dropShadowColor: '#000000aa',
-      dropShadowBlur: 6 * textScale,
+      dropShadowColor: '#333333aa',
+      dropShadowBlur: 10 * textScale,
       dropShadowAngle: Math.PI / 4,
       dropShadowDistance: 6 * textScale,
       wordWrap: true,
@@ -136,8 +139,8 @@ function assetsLoaded() {
       }
     })
     .then(([netId, netName]) => {
-      if (netId != 4) {  // Rinkeby
-        let richText = new PIXI.Text(`The contract is deployed on Rinkeby, \nbut you are now on: ${netName}.\n \nPlease switch to Rinkeby and refresh.`, textStyleFatal);
+      if (netId != 1) {  // main net
+        let richText = new PIXI.Text(`The contract is deployed on main net.\nPlease switch the network and refresh.`, textStyleFatal);
 
         richText.x = app.screen.width / 2;
         richText.y = app.screen.height / 2;
@@ -199,7 +202,7 @@ function assetsLoaded() {
         }
 
         let tStyle = new PIXI.TextStyle({
-          fontFamily: 'Roboto, Helvetica, sans-serif',
+          fontFamily: '-apple-system, Roboto, Helvetica, sans-serif',
           fontWeight: 'bold',
           fontSize: 72 * textScale,
           align: 'center',
@@ -207,8 +210,9 @@ function assetsLoaded() {
           wordWrapWidth: window.innerWidth
         });
 
-        let richText = new PIXI.Text('You have no cows :(\nGo get some tokens!\n(We gave you three free ones for previewing)', tStyle);
-        richText.alpha = 0.2;
+        let richText = new PIXI.Text('You have no cows :(\n(These 3 cows are for previewing)', tStyle);
+        richText.rotation = -Math.PI / 36;
+        richText.alpha = 0.3;
         richText.x = app.screen.width / 2;
         richText.y = app.screen.height / 2;
         richText.anchor.set(0.5);
