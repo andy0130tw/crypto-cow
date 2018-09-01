@@ -16,6 +16,7 @@
     "@material/snackbar": "^0.36.0",
     "@material/textfield": "^0.37.0",
     "@material/typography": "^0.35.0",
+    "bn.js": "4.11.6",
     "countup.js": "^1.9.3",
     "fontfaceobserver": "^2.0.13",
     "pixi.js": "^4.8.1",
@@ -33,6 +34,6 @@
     "vinyl-buffer": "^1.0.1",
     "vinyl-source-stream": "^2.0.0",
     "watchify": "^3.11.0",
-    "web3": "^1.0.0-beta.34"
+    "web3": "^1.0.0-beta.35"
   }
 }
