@@ -5,35 +5,36 @@ import { addrContract } from './constants';
 
 let web3 = utils.getWeb3Instance();
 
-function _deductPrice(p) {
+function _deductFor0xBeef(p) {
   let pBN = new BN(p);
   return pBN.sub(pBN.divn(40));
 }
 
-function getBuyPrice(price) {
+function getBuyAmount(price) {
   return utils.getContract(addrContract)
     .then(contract => {
       return contract.methods.calculateTokenBuySimple(price).call();
     })
-    .then(price => {
-      let priceDecimal = web3.utils.fromWei(_deductPrice(price));
-      return Promise.resolve(priceDecimal);
-    });
+    .then(amount => {
+      let dec = web3.utils.fromWei(_deductFor0xBeef(amount));
+      return Promise.resolve(dec);
+    })
+    .catch(err => Promise.resolve(null));
 }
 
-function getSellPrice(price) {
-  let priceReal = _deductPrice(price);
+function getSellPrice(amount) {
   return utils.getContract(addrContract)
     .then(contract => {
-      return contract.methods.calculateTokenSell(price).call();
+      return contract.methods.calculateTokenSell(amount).call();
     })
     .then(price => {
-      let priceDecimal = web3.utils.fromWei(_deductPrice(price));
-      return Promise.resolve(priceDecimal);
-    });
+      let dec = web3.utils.fromWei(_deductFor0xBeef(price));
+      return Promise.resolve(dec);
+    })
+    .catch(err => Promise.resolve(null));
 }
 
 export default {
-  getBuyPrice,
+  getBuyAmount,
   getSellPrice
 };

@@ -7,7 +7,11 @@ import utils from './utils';
 import { addrContract, etherscanDomain } from './constants';
 
 PIXI.utils.skipHello();
-let app = new PIXI.Application(window.innerWidth, window.innerHeight, { backgroundColor: 0x7AC654 });
+let app = new PIXI.Application({
+  width: window.innerWidth,
+  height: window.innerHeight,
+  backgroundColor: 0x7AC654
+});
 
 document.body.appendChild(app.view);
 
