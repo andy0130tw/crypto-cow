@@ -191,12 +191,13 @@ function assetsLoaded() {
       return contract.methods.balanceOf(web3.eth.defaultAccount).call();
     })
     .then(tokBal => {
+      const tokThershold = 1e-4;
       let tokBalInDecimal = parseFloat(web3.utils.fromWei(tokBal));
 
       let renderingCows = Math.floor(tokBalInDecimal);
       let tokBalFraction = tokBalInDecimal - renderingCows;
 
-      if (!renderingCows) {
+      if (tokBalInDecimal <= tokThershold) {
         // give 3 free cows for previewing
         renderingCows = 3.0;
 
@@ -245,8 +246,7 @@ function assetsLoaded() {
         no++;
       }
 
-
-      if (tokBalFraction > 1e-4) {
+      if (tokBalFraction > tokThershold) {
         let cowAlpha = produceCow();
         cowAlpha.alpha = tokBalFraction;
         cows.push(cowAlpha);
