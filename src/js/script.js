@@ -244,7 +244,6 @@ function setupMainScreen() {
       }
     })
     .catch(err => {
-      document.getElementById('tokenBalance').textContent = '\u2014';
       if (err) {
         console.log(err);
       }
