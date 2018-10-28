@@ -9,6 +9,7 @@ const browserify = require('browserify');
 const watchify = require('watchify');
 const babelify = require('babelify');
 const chalk = require('chalk');
+const exorcist = require('exorcist')
 
 let appRootPath = path.join(__dirname);
 
@@ -41,6 +42,7 @@ function bundle(b) {
       console.log(err.stack || err);
       console.log();
     })
+    .pipe(exorcist(path.join(__dirname, 'src/dist/app.js.map')))
     .pipe(source('app.js'))
     .pipe(buffer())
     .pipe(gulp.dest('./src/dist'));

@@ -4,14 +4,7 @@ let web3Instance = null;
 let contractCache = {};
 
 function getMetaMaskProvider() {
-  // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-  let global = (new Function('return this;'))();
-
-  if (typeof global.web3 == 'undefined') {
-    return null;
-  }
-
-  const prov = global.web3.currentProvider;
+  const prov = Web3.givenProvider;
   if (prov && web3Instance) {
     // Use the browser's ethereum provider
     web3Instance.setProvider(prov);

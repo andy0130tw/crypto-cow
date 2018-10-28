@@ -18,6 +18,8 @@
     "@material/typography": "^0.35.0",
     "bn.js": "4.11.6",
     "countup.js": "^1.9.3",
+    "ethereumjs-util": "^6.0.0",
+    "exorcist": "^1.0.1",
     "fontfaceobserver": "^2.0.13",
     "pixi.js": "^4.8.1",
     "tfilter": "^1.0.1"

@@ -13,13 +13,14 @@ let app = new PIXI.Application({
   backgroundColor: 0x7AC654
 });
 
-document.body.appendChild(app.view);
-
 let stage = new PIXI.Container();
 let topStage = new PIXI.Container();
 
 let cowAreaWidth = window.innerWidth;
 let cowAreaHeight = window.innerHeight;
+
+let cows = [];
+let elemContractAddress = document.getElementById('contractAddress');
 
 function setupStage() {
   let texture = PIXI.Texture.fromFrame('grass');
@@ -55,38 +56,7 @@ function setupStage() {
   window.dispatchEvent(new Event('resize'));
 }
 
-let cows = [];
-
-function assetsLoaded() {
-  function produceCow(flavor) {
-    let frames = [ 'cow-2', 'cow-3', 'cow-4', 'cow-3' ];
-    // if (flavor) {
-    //   frames = [ 'cow-1b', 'cow-2b' ];
-    // }
-    let cowInst = new PIXI.extras.AnimatedSprite.fromFrames(frames);
-
-    cowInst.x = (0.04 + Math.random() * 0.92) * cowAreaWidth;
-    cowInst.y = (0.08 + Math.random() * 0.84) * cowAreaHeight;
-
-    let sz = 1 + 0.3 * Math.pow(cowInst.y / app.screen.height, 2);
-    let dir = (Math.random() >= 0.5 ? 1 : -1);
-    let spd = (Math.random() + 1);
-
-    cowInst.isWalking = true;
-    // probabilities of walk->stop & stop->walk
-    cowInst.transProb = [Math.random() * 0.1, Math.random() * 0.1 + 0.1];
-    cowInst.period = Math.random();
-    cowInst.dir = dir;
-    cowInst.scale.x = sz * .3 * dir;
-    cowInst.scale.y = sz * .3;
-    cowInst.anchor.set(0.5);
-    cowInst.animationSpeed = 0.05 * spd;
-    cowInst.moveSpeed = 0.8 * spd;
-
-    return cowInst;
-  }
-
-  let elemContractAddress = document.getElementById('contractAddress');
+function setupMainScreen() {
   elemContractAddress.href = `https://${etherscanDomain}/address/${addrContract}`;
 
   const ethProvider = utils.getMetaMaskProvider();
@@ -120,7 +90,7 @@ function assetsLoaded() {
   document.body.classList.add('complete');
 
   if (ethProvider == null) {
-    let richText = new PIXI.Text('No Web3 detected.\nYou should install MetaMask to see cows!', textStyleFatal);
+    let richText = new PIXI.Text('No Ethereum provider detected.\nYou should install MetaMask to see cows!', textStyleFatal);
 
     richText.x = app.screen.width / 2;
     richText.y = app.screen.height / 2;
@@ -129,6 +99,7 @@ function assetsLoaded() {
 
     return;
   }
+
 
   const web3 = utils.getWeb3Instance();
 
@@ -154,25 +125,15 @@ function assetsLoaded() {
         return Promise.reject(null);
       }
 
-      return web3.eth.getAccounts();
+      if (ethProvider.enable) {
+        return ethProvider.enable();
+      } else {
+        // older/unsupported EthereumProvider (for EIP-1102)
+        return web3.eth.getAccounts();
+      }
     })
     .then(accList => {
-      if (accList[0] == null) {
-        let richText = new PIXI.Text('No wallet address detected.\nYou may need to unlock your account, and refresh.', textStyleFatal);
-
-        richText.x = app.screen.width / 2;
-        richText.y = app.screen.height / 2;
-        richText.anchor.set(0.5);
-        topStage.addChild(richText);
-
-        return Promise.reject(null);
-      }
-
       let elemWalletAddress = document.getElementById('walletAddress');
-      web3.eth.defaultAccount = accList[0];
-
-      let accountTruncator = s => s.slice(0, 10) + '…' + s.slice(-8);
-      elemWalletAddress.textContent = accountTruncator(web3.eth.defaultAccount);
 
       let accChangeWatcher = setInterval(() => {
         web3.eth.getAccounts().then(acc => {
@@ -184,6 +145,22 @@ function assetsLoaded() {
           }
         });
       }, 500);
+
+      if (accList[0] == null) {
+        let richText = new PIXI.Text('No wallet address detected.\nYou may need to unlock your account.', textStyleFatal);
+
+        richText.x = app.screen.width / 2;
+        richText.y = app.screen.height / 2;
+        richText.anchor.set(0.5);
+        topStage.addChild(richText);
+
+        return Promise.reject(null);
+      }
+
+      web3.eth.defaultAccount = accList[0];
+
+      let accountTruncator = s => s.slice(0, 10) + '…' + s.slice(-8);
+      elemWalletAddress.textContent = accountTruncator(web3.eth.defaultAccount);
 
       return utils.getContract(addrContract);
     })
@@ -231,16 +208,10 @@ function assetsLoaded() {
         tokBalFraction = 0;
       }
 
-      // eth addr is 40-char; 40 * 8 > 300
       let no = 0;
       for (let i = 0; i < renderingCows; i += 16) {
         for (let j = 0; j < 16 && i + j < renderingCows; j++) {
           let cow = produceCow(parseInt(web3.eth.defaultAccount[no + 2], 16) == j);
-          // console.log('j, no, addr[no], isFlavor?',
-          //             j,
-          //             no,
-          //             parseInt(web3.eth.defaultAccount[no + 2], 16),
-          //             parseInt(web3.eth.defaultAccount[no + 2], 16) == j);
           cows.push(cow);
         }
         no++;
@@ -272,35 +243,40 @@ function assetsLoaded() {
         console.error(animTokBal.error);
       }
     })
-    .catch(err => console.log(err));
+    .catch(err => {
+      document.getElementById('tokenBalance').textContent = '\u2014';
+      if (err) {
+        console.log(err);
+      }
+    });
 }
 
-let fontLoaderPromises = [
-  ['Philosopher', null, 2000],
-  ['Fira Sans', null, 2000]
-].map(([s, opt, t]) => ((new FontFaceObserver(s)).load(opt, t)));
+function produceCow(flavor) {
+  let frames = [ 'cow-2', 'cow-3', 'cow-4', 'cow-3' ];
+  let cowInst = new PIXI.extras.AnimatedSprite.fromFrames(frames);
 
+  cowInst.x = (0.04 + Math.random() * 0.92) * cowAreaWidth;
+  cowInst.y = (0.08 + Math.random() * 0.84) * cowAreaHeight;
 
-Promise.all(fontLoaderPromises)
-.catch(fontspec => {
-  // ignore the error, actually
-  console.warn(`Failed to load webfont "${fontspec.family}" in time:`, fontspec);
-})
-.then(() => {
-  PIXI.loader
-    .add('cow-2', 'assets/cow-2.png')
-    .add('cow-3', 'assets/cow-3.png')
-    .add('cow-4', 'assets/cow-4.png')
-    .load(assetsLoaded);
-});
+  let sz = 1 + 0.3 * Math.pow(cowInst.y / app.screen.height, 2);
+  let dir = (Math.random() >= 0.5 ? 1 : -1);
+  let spd = (Math.random() + 1);
 
-let stageLoader = new PIXI.loaders.Loader();
+  cowInst.isWalking = true;
+  // probabilities of walk->stop & stop->walk
+  cowInst.transProb = [Math.random() * 0.1, Math.random() * 0.1 + 0.1];
+  cowInst.period = Math.random();
+  cowInst.dir = dir;
+  cowInst.scale.x = sz * .3 * dir;
+  cowInst.scale.y = sz * .3;
+  cowInst.anchor.set(0.5);
+  cowInst.animationSpeed = 0.05 * spd;
+  cowInst.moveSpeed = 0.8 * spd;
 
-stageLoader
-  .add('grass', 'assets/grass.jpg')
-  .load(setupStage);
+  return cowInst;
+}
 
-app.ticker.add(() => {
+function updateCowPosition(cows) {
   cows.forEach(cow => {
     cow.period += 0.01 * cow.moveSpeed;
 
@@ -333,8 +309,54 @@ app.ticker.add(() => {
     }
 
     if (cow.isWalking) {
-      cow.x += -cow.dir * cow.moveSpeed * (Math.sin(cow.period * 6.28) * 0.4 + 1);
+      cow.x += -cow.dir * cow.moveSpeed * (Math.sin(cow.period * Math.PI * 2) * 0.4 + 1);
     }
-
   });
-});
+}
+
+(function init() {
+  document.body.appendChild(app.view);
+
+  // load fonts + assets
+  let fontLoaderPromises = [
+    ['Philosopher', null, 2000],
+    ['Fira Sans', null, 2000]
+  ].map(([s, opt, t]) => ((new FontFaceObserver(s)).load(opt, t)));
+
+  let promiseLoadAssets = new Promise((resolve, reject) => {
+    PIXI.loader
+      .add('cow-2', 'assets/cow-2.png')
+      .add('cow-3', 'assets/cow-3.png')
+      .add('cow-4', 'assets/cow-4.png')
+      .load(function() {
+        // naive, optimistic loader callback
+        resolve.apply(this, arguments);
+      });
+  });
+
+  let promiseLoadFont = Promise.all(fontLoaderPromises)
+    .catch(fontspec => {
+      // ignore the error, actually
+      console.warn(`Failed to load webfont "${fontspec.family}" in time:`, fontspec);
+    });
+
+  let promiseLoadAll = Promise.all([
+    promiseLoadAssets,
+    promiseLoadFont
+  ])
+  .then(setupMainScreen)
+  .then(() => {
+    // add ticker
+    app.ticker.add(() => {
+      updateCowPosition(cows);
+    });
+  });
+
+  // load grass background tile, init pixi & stage
+
+  let stageLoader = new PIXI.loaders.Loader();
+
+  stageLoader
+    .add('grass', 'assets/grass.jpg')
+    .load(setupStage);
+})();
