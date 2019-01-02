@@ -83,12 +83,15 @@ body.loading #contractAddress {
   font-family: Philosopher, 'Fira Sans', Roboto, sans-serif;
 }
 
-.--buySellEthField {
-  max-width: 10em;
+.--buySellEthField,
+.--buySellCowField,
+.--transferCowField {
+  max-width: 15rem;
 }
 
-.--buySellCowField {
-  max-width: 10em;
+.--prevent-break {
+  display: inline-block;
+  white-space: nowrap;
 }
 
 button.mdc-button.mdc-button--_big {
@@ -131,5 +134,50 @@ body.loading .hide-when-loading {
   }
   .break-on-small-screen {
     display: inline;
+  }
+}
+
+/********** Quirks **********/
+@media (min-width: 600px) {
+  .mdc-drawer {
+    width: calc(100% - 64px);
+    max-width: 320px;
+  }
+}
+
+.mdc-drawer .mdc-drawer__header {
+    position: relative;
+}
+
+.mdc-drawer .mdc-drawer__header:before {
+  display: block;
+  padding-top: 56.25%;
+  content: "";
+}
+
+.mdc-drawer .mdc-drawer__header-content {
+  display: flex;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  align-items: flex-end;
+  box-sizing: border-box;
+  padding: 16px;
+}
+
+.mdc-drawer .mdc-list-item--activated,
+.mdc-drawer .mdc-list-item--activated .mdc-list-item__graphic {
+  color: var(--mdc-theme-primary, #6200ee);
+}
+
+.mdc-drawer .--align-self-center {
+  align-self: center;
+}
+
+@media screen and (min-width: 932px) {
+  .mdc-dialog .mdc-dialog__surface {
+    max-width: 900px;
   }
 }
