@@ -125,12 +125,16 @@ function setupMainScreen() {
         return Promise.reject(null);
       }
 
-      if (ethProvider.enable) {
+      return web3.eth.getAccounts()
+      .then(accList_ => {
+        if ((accList_ && accList_.length) || !ethProvider.enable) {
+          // older/unsupported EthereumProvider (for EIP-1102)
+          return Promise.resolve(accList_);
+        }
+
+        // EP of MetaMask 5+ (EIP-1102-compliant) with privacy mode on
         return ethProvider.enable();
-      } else {
-        // older/unsupported EthereumProvider (for EIP-1102)
-        return web3.eth.getAccounts();
-      }
+      });
     })
     .then(accList => {
       let elemWalletAddress = document.getElementById('walletAddress');
@@ -269,7 +273,7 @@ function produceCow(flavor) {
   cowInst.scale.x = sz * .3 * dir;
   cowInst.scale.y = sz * .3;
   cowInst.anchor.set(0.5);
-  cowInst.animationSpeed = 0.05 * spd;
+  cowInst.animationSpeed = 0.05 * 1.3 * spd;
   cowInst.moveSpeed = 0.8 * spd;
 
   return cowInst;

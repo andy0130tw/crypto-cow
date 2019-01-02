@@ -1,8 +1,9 @@
-import {MDCTemporaryDrawer} from '@material/drawer';
-import {MDCRipple}          from '@material/ripple';
-import {MDCDialog}          from '@material/dialog';
-import {MDCTextField}       from '@material/textfield';
-import {MDCSnackbar}        from '@material/snackbar';
+import {MDCDrawer}         from '@material/drawer';
+import {MDCRipple}         from '@material/ripple';
+import {MDCDialog}         from '@material/dialog';
+import {MDCTextField}      from '@material/textfield';
+import {MDCSnackbar}       from '@material/snackbar';
+import {MDCNotchedOutline} from '@material/notched-outline';
 
 import watcher from './watcher';
 import utils from './utils';
@@ -10,13 +11,14 @@ import { addrContract, etherscanDomain } from './constants';
 
 let web3 = utils.getWeb3Instance();
 
-let drawer = new MDCTemporaryDrawer(document.querySelector('.mdc-drawer--temporary'));
+const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
 
 let menuButton = document.getElementById('menuButton');
 let menuButtonRipple = new MDCRipple(menuButton);
 menuButtonRipple.unbounded = true;
 
 const buySellDialog = new MDCDialog(document.getElementById('my-mdc-dialog'));
+const transferDialog = new MDCDialog(document.getElementById('my-mdc-dialog2'));
 
 menuButton.disabled = false;
 menuButton.addEventListener('click', () => {
@@ -37,6 +39,12 @@ const sellCowFragment = document.getElementById('sellCowFragment');
 const sellEthWrapper = new MDCTextField(sellCowFragment.querySelector('.--buySellEthWrapper'));
 const sellCowWrapper = new MDCTextField(sellCowFragment.querySelector('.--buySellCowWrapper'));
 const sellCowAmountField = sellCowFragment.querySelector('.--buySellCowField');
+
+const transferCowFragment = document.getElementById('transferCowFragment');
+const transferCowAmountField = transferCowFragment.querySelector('.--transferCowField');
+const transferCowAddressField = transferCowFragment.querySelector('.--transferAddressField');
+
+new MDCNotchedOutline(transferCowAddressField);
 
 function updateDialogContent() {
   if (buySellStateIsBuy) {
@@ -61,18 +69,25 @@ function updateBuySellPrice() {
     });
 }
 
-document.getElementById('menuBuy').addEventListener('click', () => {
+document.getElementById('menuBuy').addEventListener('click', evt => {
+  evt.preventDefault();
   buySellStateIsBuy = true;
   updateDialogContent();
-  buySellDialog.show();
+  buySellDialog.open();
   updateBuySellPrice();
 });
 
-document.getElementById('menuSell').addEventListener('click', () => {
+document.getElementById('menuSell').addEventListener('click', evt => {
+  evt.preventDefault();
   buySellStateIsBuy = false;
   updateDialogContent();
-  buySellDialog.show();
+  buySellDialog.open();
   updateBuySellPrice();
+});
+
+document.getElementById('menuTransfer').addEventListener('click', evt => {
+  evt.preventDefault();
+  transferDialog.open();
 });
 
 ['propertychange', 'change', 'click', 'keyup', 'input', 'paste'].forEach(evtName => {
@@ -111,9 +126,24 @@ document.getElementById('menuSell').addEventListener('click', () => {
         resultField.value = price ? parseFloat(price).toFixed(6) : '0';
       });
   });
+
+  transferCowAddressField.addEventListener(evtName, evt => {
+    // const isAddress = web3.utils.isAddress(evt.target.value);
+  })
 });
 
-buySellDialog.listen('MDCDialog:accept', () => {
+(() => {
+  function tryConvertToWei(val) {
+    let amount;
+    try {
+      amount = web3.utils.toWei(val);
+    } catch (err) {
+      alert('請填入有效數值。');
+      console.error(err);
+    }
+    return amount;
+  }
+
   function txSentHandler(hash) {
     drawer.open = false;
     snackbar.show({
@@ -127,38 +157,65 @@ buySellDialog.listen('MDCDialog:accept', () => {
     });
   }
 
-  function tryConvertToWei(val) {
-    let amount;
-    try {
-      amount = web3.utils.toWei(val);
-    } catch (err) {
-      alert(err.message);
-      console.error(err);
-    }
-    return amount;
+  function txConfirmedHandler(hash) {
+    snackbar.show({
+      message: '交易已被確認！',
+      actionText: '重新載入',
+      timeout: 5000,
+      multiline: true,
+      actionHandler: () => {
+        location.reload();
+      }
+    });
   }
 
-  utils.getContract(addrContract).then(contract => {
-    if (buySellStateIsBuy) {
-      let value = tryConvertToWei(buyCowAmountField.value)
-      if (!value) return;
-      contract.methods.buyToken().send({
-        from: web3.eth.defaultAccount,
-        value: value
-      }).on('transactionHash', txSentHandler);
-    } else {
-      let amount = tryConvertToWei(sellCowAmountField.value);
-      if (!amount) return;
-      // XXX: should be modified to camel case in contract + ABI
-      contract.methods.selltoken(amount).send({
-        from: web3.eth.defaultAccount
-      }).on('transactionHash', txSentHandler);
-    }
+  buySellDialog.listen('MDCDialog:closing', ({ detail }) => {
+    const { action } = detail;
+    if (action == 'close') return;
+    utils.getContract(addrContract).then(contract => {
+      if (buySellStateIsBuy) {
+        let value = tryConvertToWei(buyCowAmountField.value)
+        if (!value) return;
+        contract.methods.buyToken().send({
+          from: web3.eth.defaultAccount,
+          value: value
+        }).on('transactionHash', txSentHandler);
+      } else {
+        let amount = tryConvertToWei(sellCowAmountField.value);
+        if (!amount) return;
+        // XXX: should be modified to camel case in contract + ABI
+        contract.methods.selltoken(amount).send({
+          from: web3.eth.defaultAccount
+        }).on('transactionHash', txSentHandler)
+          .on('receipt', txConfirmedHandler);
+      }
+    });
   });
-});
+
+  transferDialog.listen('MDCDialog:closing', ({ detail }) => {
+    const { action } = detail;
+    if (action == 'close') return;
+    utils.getContract(addrContract).then(contract => {
+      let amount = tryConvertToWei(transferCowAmountField.value);
+      if (!amount) return;
+
+      let addr = transferCowAddressField.value;
+      if (!web3.utils.isAddress(addr)) {
+        alert('請輸入有效的錢包地址。');
+        return;
+      }
+
+      contract.methods.transfer(addr, amount).send({
+        from: web3.eth.defaultAccount
+      }).on('transactionHash', txSentHandler)
+        .on('receipt', txConfirmedHandler);
+    });
+  });
+})();
 
 export default {
   drawer,
   menuButton,
-  buySellDialog
+  buySellDialog,
+  transferDialog,
 };
