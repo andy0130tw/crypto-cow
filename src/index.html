@@ -27,25 +27,25 @@
   <div class="mdc-drawer__content">
     <div class="mdc-list-group">
       <nav class="mdc-list mdc-list--two-line mdc-list--avatar-list">
-        <a id="menuBuy" class="mdc-list-item" href="#">
+        <a id="menuBuy" class="mdc-list-item" href="#" tabindex="0">
           <span class="material-icons mdc-list-item__graphic" aria-hidden="true">add_shopping_cart</span>
           <span class="mdc-list-item__text --align-self-center">
             <span class="mdc-list-item__primary-text">買牛牛</span>
-              <span class="mdc-list-item__secondary-text"></span>
+            <span class="mdc-list-item__secondary-text"></span>
           </span>
         </a>
         <a id="menuSell" class="mdc-list-item" href="#">
           <span class="material-icons mdc-list-item__graphic" aria-hidden="true">remove_shopping_cart</span>
           <span class="mdc-list-item__text --align-self-center">
             <span class="mdc-list-item__primary-text">賣牛牛</span>
-              <span class="mdc-list-item__secondary-text"></span>
+            <span class="mdc-list-item__secondary-text"></span>
           </span>
         </a>
         <a id="menuTransfer" class="mdc-list-item" href="#">
           <span class="material-icons mdc-list-item__graphic" aria-hidden="true">swap_horiz</span>
           <span class="mdc-list-item__text --align-self-center">
             <span class="mdc-list-item__primary-text">送牛牛</span>
-              <span class="mdc-list-item__secondary-text"></span>
+            <span class="mdc-list-item__secondary-text"></span>
           </span>
         </a>
         <a id="menuSacrifice" class="mdc-list-item" href="#">
@@ -59,7 +59,7 @@
 
       <hr class="mdc-list-divider">
 
-      <nav class="mdc-list mdc-list--avatar-list">
+      <nav id="navLinks" class="mdc-list mdc-list--avatar-list">
         <a class="mdc-list-item" href="https://www.facebook.com/cryptocowapp/" target="_blank">
           <span class="mdc-list-item__graphic" aria-hidden="true"><img src="https://www.gstatic.com/images/icons/material/system/2x/post_facebook_black_24dp.png" width="24"></span><span class="mdc-list-item__text">Facebook 粉專</span>
         </a>
@@ -126,7 +126,7 @@
           </nobr><br class="break-on-small-screen"><!--
           --> 買入
           <nobr class="--prevent-break">
-            <div class="--buySellCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--with-leading-icon">
+            <div class="--buySellCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense mdc-text-field--with-leading-icon">
               <span class="material-icons mdc-text-field__icon">lock</span>
               <input type="text" class="--buySellCowField mdc-text-field__input mdc-typography--headline5" value="0" readonly>
               <div class="mdc-line-ripple"></div>
@@ -146,7 +146,7 @@
           </nobr><br class="break-on-small-screen"><!--
           -->，獲得
           <nobr class="--prevent-break">
-            <div class="--buySellEthWrapper mdc-text-field mdc-text-field--box mdc-text-field--with-leading-icon">
+            <div class="--buySellEthWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense mdc-text-field--with-leading-icon">
               <span class="material-icons mdc-text-field__icon">lock</span>
               <input type="text" class="--buySellEthField mdc-text-field__input mdc-typography--headline5" value="0" readonly>
               <div class="mdc-line-ripple"></div>
@@ -178,25 +178,28 @@
   <div class="mdc-dialog__container">
     <div class="mdc-dialog__surface">
       <h2 class="mdc-dialog__title"><!--
-     -->買牛/賣牛<!--
+     -->送牛<!--
    --></h2>
 
       <section class="mdc-dialog__content">
         <div id="transferCowFragment" class="mdc-typography--headline5">
         將
         <nobr class="--prevent-break">
-          <div class="--transferCowWrapper mdc-text-field mdc-text-field--box">
+          <div class="--transferCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense">
             <input type="text" class="--transferCowField mdc-text-field__input mdc-typography--headline5">
             <div class="mdc-line-ripple"></div>
           </div>
           COW
         </nobr><br class="break-on-small-screen"><!--
         --> 送給
-        <div class="--transferCowWrapper mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
+        <div class="--transferAddressWrapper mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
           <span class="material-icons mdc-text-field__icon">account_box</span>
-          <input type="text" class="--transferAddressField mdc-text-field__input mdc-typography--headline5">
+          <input id="tf-outlined" type="text" class="--transferAddressField mdc-text-field__input mdc-typography--headline5">
           <div class="mdc-notched-outline">
             <div class="mdc-notched-outline__leading"></div>
+            <div class="mdc-notched-outline__notch">
+              <label for="tf-outlined" class="mdc-floating-label">收件人錢包地址</label>
+            </div>
             <div class="mdc-notched-outline__trailing"></div>
           </div>
         </div>

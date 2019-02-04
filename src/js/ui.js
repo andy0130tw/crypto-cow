@@ -4,32 +4,37 @@ import {MDCDialog}         from '@material/dialog';
 import {MDCTextField}      from '@material/textfield';
 import {MDCSnackbar}       from '@material/snackbar';
 import {MDCNotchedOutline} from '@material/notched-outline';
+import {MDCList}           from '@material/list';
 
 import watcher from './watcher';
 import utils from './utils';
 import { addrContract, etherscanDomain } from './constants';
 
-let web3 = utils.getWeb3Instance();
+const web3 = utils.getWeb3Instance();
 
+// --- drawer ---
 const drawer = MDCDrawer.attachTo(document.querySelector('.mdc-drawer'));
+const navLinks = MDCList.attachTo(document.getElementById('navLinks'));
 
-let menuButton = document.getElementById('menuButton');
-let menuButtonRipple = new MDCRipple(menuButton);
+// --- hamburger icon ---
+const menuButton = document.getElementById('menuButton');
+const menuButtonRipple = new MDCRipple(menuButton);
 menuButtonRipple.unbounded = true;
-
-const buySellDialog = new MDCDialog(document.getElementById('my-mdc-dialog'));
-const transferDialog = new MDCDialog(document.getElementById('my-mdc-dialog2'));
 
 menuButton.disabled = false;
 menuButton.addEventListener('click', () => {
   drawer.open = true;
 });
 
+// --- modals ---
+const buySellDialog = new MDCDialog(document.getElementById('my-mdc-dialog'));
+const transferDialog = new MDCDialog(document.getElementById('my-mdc-dialog2'));
+
+// --- notification ---
 const snackbar = new MDCSnackbar(document.getElementById('my-mdc-snackbar'));
 snackbar.dismissesOnAction = false;
 
-let buySellStateIsBuy = true;
-
+// --- input fields ---
 const buyCowFragment = document.getElementById('buyCowFragment');
 const buyEthWrapper = new MDCTextField(buyCowFragment.querySelector('.--buySellEthWrapper'));
 const buyCowWrapper = new MDCTextField(buyCowFragment.querySelector('.--buySellCowWrapper'));
@@ -41,10 +46,12 @@ const sellCowWrapper = new MDCTextField(sellCowFragment.querySelector('.--buySel
 const sellCowAmountField = sellCowFragment.querySelector('.--buySellCowField');
 
 const transferCowFragment = document.getElementById('transferCowFragment');
+const transferCowWrapper = new MDCTextField(transferCowFragment.querySelector('.--transferCowWrapper'));
+const transferAddressWrapper = new MDCTextField(transferCowFragment.querySelector('.--transferAddressWrapper'));
 const transferCowAmountField = transferCowFragment.querySelector('.--transferCowField');
 const transferCowAddressField = transferCowFragment.querySelector('.--transferAddressField');
 
-new MDCNotchedOutline(transferCowAddressField);
+let buySellStateIsBuy = true;
 
 function updateDialogContent() {
   if (buySellStateIsBuy) {
@@ -64,8 +71,10 @@ function updateBuySellPrice() {
     watcher.getSellPrice(web3.utils.toWei('1'))
   ])
     .then(([buyPrice, sellPrice]) => {
-      document.getElementById('priceBuyInEth').textContent = parseFloat(buyPrice).toFixed(6);
-      document.getElementById('priceSellInEth').textContent = parseFloat(sellPrice).toFixed(6);
+      document.getElementById('priceBuyInEth').textContent =
+        buyPrice ? parseFloat(buyPrice).toFixed(6) : '(N/A)';
+      document.getElementById('priceSellInEth').textContent =
+        sellPrice ? parseFloat(sellPrice).toFixed(6) : '(N/A)';
     });
 }
 
@@ -136,6 +145,7 @@ document.getElementById('menuTransfer').addEventListener('click', evt => {
   function tryConvertToWei(val) {
     let amount;
     try {
+      if (+val < 0) throw new Error('');
       amount = web3.utils.toWei(val);
     } catch (err) {
       alert('請填入有效數值。');
@@ -213,9 +223,18 @@ document.getElementById('menuTransfer').addEventListener('click', evt => {
   });
 })();
 
+
+function _fillTransferForm(addr) {
+  transferCowFragment.querySelector('.mdc-notched-outline').classList.add('mdc-notched-outline--notched');
+  transferCowFragment.querySelector('label').classList.add('mdc-floating-label--float-above');
+  transferCowAddressField.value = addr;
+}
+
 export default {
   drawer,
   menuButton,
   buySellDialog,
   transferDialog,
+
+  _fillTransferForm,
 };

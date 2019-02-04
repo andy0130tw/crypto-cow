@@ -1,6 +1,7 @@
 import * as PIXI from 'pixi.js';
 import CountUp from 'countup.js';
 import FontFaceObserver from 'fontfaceobserver';
+import Web3 from 'web3';
 
 import ui from './ui';
 import utils from './utils';
@@ -103,7 +104,7 @@ function setupMainScreen() {
 
   const web3 = utils.getWeb3Instance();
 
-  web3.eth.net.getId()
+  return web3.eth.net.getId()
     .then(netId => {
       switch (netId) {
       case  1: return [netId, 'mainnet'];
@@ -353,6 +354,16 @@ function updateCowPosition(cows) {
     app.ticker.add(() => {
       updateCowPosition(cows);
     });
+
+    // param detection
+    const searchParam = new URLSearchParams(new URL(document.baseURI).search);
+    if (searchParam.has('wallet')) {
+      const addr = searchParam.get('wallet');
+      if (Web3.utils.isAddress(addr)) {
+        ui._fillTransferForm(addr);
+      }
+      ui.transferDialog.open();
+    }
   });
 
   // load grass background tile, init pixi & stage
