@@ -145,6 +145,10 @@ body.loading .hide-when-loading {
   }
 }
 
+.mdc-drawer .mdc-drawer__content {
+  padding: 8px 0;
+}
+
 .mdc-drawer .mdc-drawer__header {
     position: relative;
 }
@@ -169,6 +173,11 @@ body.loading .hide-when-loading {
 
 .mdc-drawer .mdc-list-item--activated,
 .mdc-drawer .mdc-list-item--activated .mdc-list-item__graphic {
+  color: var(--mdc-theme-primary, #6200ee);
+}
+
+.mdc-text-field--focused:not(.mdc-text-field--disabled) .mdc-floating-label {
+  /* should have 87% bg, but never mind */
   color: var(--mdc-theme-primary, #6200ee);
 }
 
