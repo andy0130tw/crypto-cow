@@ -183,30 +183,32 @@
 
       <section class="mdc-dialog__content">
         <div id="transferCowFragment" class="mdc-typography--headline5">
-        將
-        <nobr class="--prevent-break">
-          <div class="--transferCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense">
-            <input type="text" class="--transferCowField mdc-text-field__input mdc-typography--headline5">
-            <div class="mdc-line-ripple"></div>
-          </div>
-          COW
-        </nobr><br class="break-on-small-screen"><!--
-        --> 送給
-        <div class="--transferAddressWrapper mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
-          <span class="material-icons mdc-text-field__icon">account_box</span>
-          <input id="tf-outlined" type="text" class="--transferAddressField mdc-text-field__input mdc-typography--headline5">
-          <div class="mdc-notched-outline">
-            <div class="mdc-notched-outline__leading"></div>
-            <div class="mdc-notched-outline__notch">
-              <label for="tf-outlined" class="mdc-floating-label">收件人錢包地址</label>
+          將
+          <nobr class="--prevent-break">
+            <div class="--transferCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense">
+              <input type="text" class="--transferCowField mdc-text-field__input mdc-typography--headline5">
+              <div class="mdc-line-ripple"></div>
             </div>
-            <div class="mdc-notched-outline__trailing"></div>
+            COW
+          </nobr><br class="break-on-small-screen"><!--
+          --> 送給
+          <div class="--transferAddressWrapper mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
+            <span class="material-icons mdc-text-field__icon">account_box</span>
+            <input id="tf-outlined" type="text" class="--transferAddressField mdc-text-field__input mdc-typography--headline5">
+            <div class="mdc-notched-outline">
+              <div class="mdc-notched-outline__leading"></div>
+              <div class="mdc-notched-outline__notch">
+                <label for="tf-outlined" class="mdc-floating-label">收件人錢包地址</label>
+              </div>
+              <div class="mdc-notched-outline__trailing"></div>
+            </div>
           </div>
         </div>
-      </div>
+        <div id="sendLinkHint" class="mdc-typography--subtitle1">用<a id="myLink" href="/">這個網址</a>讓別人送牛給你 (右鍵/長按複製連結網址)</div>
       </section>
 
       <footer class="mdc-dialog__actions">
+
         <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__button" data-mdc-dialog-action="close">關閉</button>
         <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__button mdc-button--raised" data-mdc-dialog-action="accept" style="font-weight: bold">送出交易</button>
       </footer>
