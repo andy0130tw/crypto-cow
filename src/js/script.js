@@ -164,8 +164,10 @@ function setupMainScreen() {
 
       web3.eth.defaultAccount = accList[0];
 
-      let accountTruncator = s => s.slice(0, 10) + '…' + s.slice(-8);
+      const accountTruncator = s => s.slice(0, 10) + '…' + s.slice(-8);
       elemWalletAddress.textContent = accountTruncator(web3.eth.defaultAccount);
+      console.log(document.getElementById('myLink'))
+      document.getElementById('myLink').href = `/?wallet=${web3.eth.defaultAccount}`;
 
       return utils.getContract(addrContract);
     })
