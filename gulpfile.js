@@ -31,27 +31,25 @@ const externalDeps = [
 
 const NODE_ENV = process.env.NODE_ENV || 'development';
 
-const externalsTransform = (() => {
-  const extPath = 'dist/vendor.js'
-  let transformed = false
+const getExternalsTransform = (extPath) => {
+  let transformed = false;
 
   function transform(buf, enc, next) {
     if (!transformed) {
       this.push(`(function(d){t=d.createElement('script');t.src='${extPath}';d.head.appendChild(t);t.onload=(function(){`);
-      transformed = true
+      transformed = true;
     }
-
     this.push(buf);
     next();
   }
 
-  function flush() {
-    this.push(`})})(document)`)
-    this.push(null)
+  function flush(next) {
+    this.push(`})})(document)`);
+    next();
   }
 
-  return new stream.Transform({ transform, flush })
-})()
+  return new stream.Transform({ transform, flush });
+};
 
 function getBrowserifyBase(debug) {
   let plugin = [];
@@ -105,7 +103,7 @@ gulp.task('debug', () => {
   let b = getBrowserifyBase(true);
 
   b.on('bundle', () => {
-    b.pipeline.get('wrap').unshift(externalsTransform);
+    b.pipeline.get('wrap').unshift(getExternalsTransform('dist/vendor.js'));
   });
 
   b.on('log', log => {
