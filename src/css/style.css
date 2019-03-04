@@ -86,7 +86,7 @@ body.loading #contractAddress {
 .--buySellEthField,
 .--buySellCowField,
 .--transferCowField {
-  max-width: 15rem;
+  max-width: 12rem;
 }
 
 .--prevent-break {
@@ -135,6 +135,12 @@ body.loading .hide-when-loading {
   .break-on-small-screen {
     display: inline;
   }
+}
+
+#buyCowFragment,
+#sellCowFragment,
+#transferCowFragment {
+  line-height: 2.4;
 }
 
 /********** Quirks **********/
@@ -187,6 +193,7 @@ body.loading .hide-when-loading {
 
 @media screen and (min-width: 932px) {
   .mdc-dialog .mdc-dialog__surface {
+    min-width: 720px;
     max-width: 900px;
   }
 }

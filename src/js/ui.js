@@ -51,6 +51,11 @@ const transferAddressWrapper = new MDCTextField(transferCowFragment.querySelecto
 const transferCowAmountField = transferCowFragment.querySelector('.--transferCowField');
 const transferCowAddressField = transferCowFragment.querySelector('.--transferAddressField');
 
+// --- my link ---
+const copyMyLinkButton = document.getElementById('copyMyLink');
+// FIXME: incorrect ripple position!
+const copyMyLinkRipple = new MDCRipple(copyMyLinkButton);
+
 let buySellStateIsBuy = true;
 
 function updateDialogContent() {
@@ -97,6 +102,12 @@ document.getElementById('menuSell').addEventListener('click', evt => {
 document.getElementById('menuTransfer').addEventListener('click', evt => {
   evt.preventDefault();
   transferDialog.open();
+});
+
+copyMyLinkButton.addEventListener('click', evt => {
+  evt.preventDefault();
+  document.getElementById('myLink').select();
+  document.execCommand('copy');
 });
 
 ['propertychange', 'change', 'click', 'keyup', 'input', 'paste'].forEach(evtName => {
@@ -225,7 +236,6 @@ document.getElementById('menuTransfer').addEventListener('click', evt => {
 
 
 function _fillTransferForm(addr) {
-  transferCowFragment.querySelector('.mdc-notched-outline').classList.add('mdc-notched-outline--notched');
   transferCowFragment.querySelector('label').classList.add('mdc-floating-label--float-above');
   transferCowAddressField.value = addr;
 }

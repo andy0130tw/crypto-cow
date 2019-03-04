@@ -9,6 +9,7 @@
 <link rel="stylesheet" href="css/material-components-web.min.css">
 <link rel="stylesheet" href="css/style.css">
 <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=1">
+<meta property="description" content="區塊牛：牛有四個胃，區塊牛也有。為了幫你消化難解的區塊鏈新知而生。是為消化系區塊鏈資訊共筆平台。">
 <meta property="og:type" content="website">
 <meta property="og:title" content="CryptoCow：區塊牛">
 <meta property="og:url" content="https://cryptocow.app/">
@@ -119,7 +120,7 @@
           以
           <nobr class="--prevent-break">
             <div class="--buySellEthWrapper mdc-text-field mdc-text-field--box">
-              <input type="text" class="--buySellEthField mdc-text-field__input mdc-typography--headline5">
+              <input type="text" class="--buySellEthField mdc-text-field__input mdc-typography--headline5" pattern="\d*(\.\d*)?">
               <div class="mdc-line-ripple"></div>
             </div>
             ETH
@@ -139,7 +140,7 @@
           賣出
           <nobr class="--prevent-break">
             <div class="--buySellCowWrapper mdc-text-field mdc-text-field--box">
-              <input type="text" class="--buySellCowField mdc-text-field__input mdc-typography--headline5">
+              <input type="text" class="--buySellCowField mdc-text-field__input mdc-typography--headline5" pattern="\d*(\.\d*)?">
               <div class="mdc-line-ripple"></div>
             </div>
             COW
@@ -186,29 +187,33 @@
           將
           <nobr class="--prevent-break">
             <div class="--transferCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense">
-              <input type="text" class="--transferCowField mdc-text-field__input mdc-typography--headline5">
+              <input type="text" class="--transferCowField mdc-text-field__input mdc-typography--headline5" pattern="\d*(\.\d*)?">
               <div class="mdc-line-ripple"></div>
             </div>
             COW
           </nobr><br class="break-on-small-screen"><!--
           --> 送給
-          <div class="--transferAddressWrapper mdc-text-field mdc-text-field--outlined mdc-text-field--with-leading-icon">
+          <div class="--transferAddressWrapper mdc-text-field mdc-text-field--with-leading-icon">
             <span class="material-icons mdc-text-field__icon">account_box</span>
-            <input id="tf-outlined" type="text" class="--transferAddressField mdc-text-field__input mdc-typography--headline5">
-            <div class="mdc-notched-outline">
-              <div class="mdc-notched-outline__leading"></div>
-              <div class="mdc-notched-outline__notch">
-                <label for="tf-outlined" class="mdc-floating-label">收件人錢包地址</label>
-              </div>
-              <div class="mdc-notched-outline__trailing"></div>
-            </div>
+            <label class="mdc-floating-label">收件人錢包地址</label>
+            <input type="text" class="--transferAddressField mdc-text-field__input mdc-typography--headline5" pattern="0x[0-9a-fA-F]{40}">
+            <div class="mdc-line-ripple"></div>
           </div>
         </div>
-        <div id="sendLinkHint" class="mdc-typography--subtitle1">用<a id="myLink" href="/">這個網址</a>讓別人送牛給你 (右鍵/長按複製連結網址)</div>
+        <div id="sendLinkHint" class="mdc-typography--subtitle1">
+          <div id="myLinkWrapper" class="mdc-text-field mdc-text-field--outlined">
+            <input type="text" id="myLink" class="mdc-text-field__input" style="padding-right: 0" readonly>
+            <div class="mdc-notched-outline">
+              <div class="mdc-notched-outline__leading"></div>
+              <div class="mdc-notched-outline__trailing"></div>
+            </div>
+            <button id="copyMyLink" class="mdc-icon-button material-icons" style="margin-top: 4px">file_copy</button>
+          </div>
+          用這個網址讓別人送牛給你<a id="myLink_" style="display:hidden"></a>
+        </div>
       </section>
 
       <footer class="mdc-dialog__actions">
-
         <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__button" data-mdc-dialog-action="close">關閉</button>
         <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__button mdc-button--raised" data-mdc-dialog-action="accept" style="font-weight: bold">送出交易</button>
       </footer>
