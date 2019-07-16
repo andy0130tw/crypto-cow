@@ -9,7 +9,7 @@ import {MDCSelect}         from '@material/select';
 
 import watcher from './watcher';
 import utils from './utils';
-import { addrContract, etherscanDomain } from './constants';
+import { addContract, etherscanDomain, tokens } from './constants';
 
 const web3 = utils.getWeb3Instance();
 
@@ -53,7 +53,11 @@ const transferAddressWrapper = new MDCTextField(transferCowFragment.querySelecto
 const transferCowAmountField = transferCowFragment.querySelector('.--transferCowField');
 const transferCowAddressField = transferCowFragment.querySelector('.--transferAddressField');
 
-const erc20tokenSelect = new MDCSelect(document.querySelector('.--erc20TokenSelect'))
+const erc20BuyCowFragment = document.getElementById('erc20BuyCowFragment');
+const erc20AmountWrapper = new MDCTextField(erc20BuyCowFragment.querySelector('.--erc20AmountWrapper'));
+const erc20tokenSelect = new MDCSelect(erc20BuyCowFragment.querySelector('.--erc20TokenSelect'));
+const erc20BuyCowAmountWrapper = new MDCTextField(erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountWrapper'));
+const erc20BuyCowAmountField = erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountField');
 
 // --- my link ---
 const copyMyLinkButton = document.getElementById('copyMyLink');
@@ -79,12 +83,28 @@ function updateBuySellPrice() {
     watcher.getBuyAmount(web3.utils.toWei('0.1')),
     watcher.getSellPrice(web3.utils.toWei('1'))
   ])
-    .then(([buyPrice, sellPrice]) => {
-      document.getElementById('priceBuyInEth').textContent =
+  .then(([buyPrice, sellPrice]) => {
+    document.querySelectorAll('.priceBuyInEth').forEach(elem => {
+      elem.textContent =
         buyPrice ? parseFloat(buyPrice).toFixed(6) : '(N/A)';
-      document.getElementById('priceSellInEth').textContent =
+    })
+    document.querySelectorAll('.priceSellInEth').forEach(elem => {
+      elem.textContent =
         sellPrice ? parseFloat(sellPrice).toFixed(6) : '(N/A)';
-    });
+    })
+  });
+}
+
+function updateTokenSelectItems () {
+  const items = Object.keys(tokens).map(address => {
+    const li = document.createElement('li')
+    li.classList.add('mdc-list-item')
+    li.setAttribute('data-value', address)
+    li.textContent = tokens[address].symbol
+    return li
+  })
+  const menuList = document.querySelector('.mdc-select__menu > .mdc-list')
+  menuList.append(...items)
 }
 
 document.getElementById('menuBuy').addEventListener('click', evt => {
@@ -111,6 +131,8 @@ document.getElementById('menuTransfer').addEventListener('click', evt => {
 document.getElementById('menuERC20Buy').addEventListener('click', evt => {
   evt.preventDefault();
   erc20BuyDialog.open();
+  updateBuySellPrice();
+  updateTokenSelectItems();
 })
 
 copyMyLinkButton.addEventListener('click', evt => {
