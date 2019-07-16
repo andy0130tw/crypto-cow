@@ -15,6 +15,7 @@
     "@material/icon-button": "^0.42.0",
     "@material/notched-outline": "^0.42.1",
     "@material/ripple": "^0.42.0",
+    "@material/select": "^3.0.0",
     "@material/snackbar": "^0.42.0",
     "@material/textfield": "^0.42.1",
     "@material/typography": "^0.42.0",
