@@ -160,7 +160,6 @@ erc20ApproveButton.addEventListener('click', evt => {
         erc20BuyConfirmButton.disabled = true;
       } else {
         utils.pollTransactionReceipt(transactionHash).then(receipt => {
-          console.log(receipt)
           erc20BuyConfirmButton.disabled = false;
         });
       }
@@ -291,9 +290,26 @@ erc20ApproveButton.addEventListener('click', evt => {
     });
   });
 
-  erc20tokenSelect.listen('MDCSelect:change', () => {
-    erc20BuyConfirmButton.disabled = true
+  erc20AmountField.addEventListener('change', () => {
+    erc20BuyConfirmButton.disabled = true;
   });
+
+  erc20tokenSelect.listen('MDCSelect:change', () => {
+    erc20BuyConfirmButton.disabled = true;
+  });
+
+  erc20BuyDialog.listen('MDCDialog:closing', ({ detail }) => {
+    const { action } = detail;
+    if (action == 'close') return;
+    const amount = erc20AmountField.value;
+    const tokenAddress = erc20tokenSelect.value;
+    const rawAmount = amount * Math.pow(10, tokens[tokenAddress].decimals)
+    utils.getSwapContract(cowSwapAddress).then(contract => {
+      contract.methods.tokenToCow(tokenAddress, rawAmount)
+        .send({ from: web3.eth.defaultAccount })
+        .on('transactionHash', txSentHandler);
+    })
+  })
 })();
 
 
