@@ -85,8 +85,14 @@ body.loading #contractAddress {
 
 .--buySellEthField,
 .--buySellCowField,
-.--transferCowField {
+.--transferCowField,
+.--erc20AmountField,
+.--erc20BuyCowField {
   max-width: 12rem;
+}
+
+.--erc20TokenSelect {
+  max-width: 6rem
 }
 
 .--prevent-break {

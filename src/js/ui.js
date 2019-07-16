@@ -5,6 +5,7 @@ import {MDCTextField}      from '@material/textfield';
 import {MDCSnackbar}       from '@material/snackbar';
 import {MDCNotchedOutline} from '@material/notched-outline';
 import {MDCList}           from '@material/list';
+import {MDCSelect}         from '@material/select';
 
 import watcher from './watcher';
 import utils from './utils';
@@ -29,6 +30,7 @@ menuButton.addEventListener('click', () => {
 // --- modals ---
 const buySellDialog = new MDCDialog(document.getElementById('my-mdc-dialog'));
 const transferDialog = new MDCDialog(document.getElementById('my-mdc-dialog2'));
+const erc20BuyDialog = new MDCDialog(document.getElementById('mdc-dialog-erc20-buy'));
 
 // --- notification ---
 const snackbar = new MDCSnackbar(document.getElementById('my-mdc-snackbar'));
@@ -50,6 +52,8 @@ const transferCowWrapper = new MDCTextField(transferCowFragment.querySelector('.
 const transferAddressWrapper = new MDCTextField(transferCowFragment.querySelector('.--transferAddressWrapper'));
 const transferCowAmountField = transferCowFragment.querySelector('.--transferCowField');
 const transferCowAddressField = transferCowFragment.querySelector('.--transferAddressField');
+
+const erc20tokenSelect = new MDCSelect(document.querySelector('.--erc20TokenSelect'))
 
 // --- my link ---
 const copyMyLinkButton = document.getElementById('copyMyLink');
@@ -103,6 +107,11 @@ document.getElementById('menuTransfer').addEventListener('click', evt => {
   evt.preventDefault();
   transferDialog.open();
 });
+
+document.getElementById('menuERC20Buy').addEventListener('click', evt => {
+  evt.preventDefault();
+  erc20BuyDialog.open();
+})
 
 copyMyLinkButton.addEventListener('click', evt => {
   evt.preventDefault();
