@@ -154,8 +154,9 @@ erc20ApproveButton.addEventListener('click', evt => {
   const amount = erc20AmountField.value;
   const tokenAddress = erc20tokenSelect.value;
   if (!amount) return false
+  const rawAmount = amount * Math.pow(10, tokens[tokenAddress].decimals)
   utils.getContract(tokenAddress).then(contract => {
-    contract.methods.approve(cowSwapAddress, amount).send({ from: web3.eth.defaultAccount}, (err, transactionHash) => {
+    contract.methods.approve(cowSwapAddress, rawAmount).send({ from: web3.eth.defaultAccount}, (err, transactionHash) => {
       if (err) {
         erc20BuyConfirmButton.disabled = true;
       } else {
@@ -207,6 +208,23 @@ erc20ApproveButton.addEventListener('click', evt => {
   transferCowAddressField.addEventListener(evtName, evt => {
     // const isAddress = web3.utils.isAddress(evt.target.value);
   })
+
+  erc20AmountField.addEventListener(evtName, evt => {
+    const tokenAddress = erc20tokenSelect.value;
+    if (!tokenAddress) return false;
+    const resultField = erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountField');
+    if (evt.target.value === '') {
+      resultField.value = '0';
+      return;
+    }
+
+    const value = Number.parseFloat(evt.target.value) * Math.pow(10, tokens[tokenAddress].decimals)
+    if (!value) return false;
+    watcher.getBuyAmountWithErc20(value.toString(), tokens[tokenAddress].exchangeAddress)
+      .then(price => {
+        resultField.value = price ? parseFloat(price).toFixed(6) : '0';
+      });
+  });
 });
 
 (() => {
@@ -296,6 +314,17 @@ erc20ApproveButton.addEventListener('click', evt => {
 
   erc20tokenSelect.listen('MDCSelect:change', () => {
     erc20BuyConfirmButton.disabled = true;
+    const resultField = erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountField');
+    const amount = erc20AmountField.value;
+    const tokenAddress = erc20tokenSelect.value;
+    if (!amount || !tokenAddress) return false;
+
+    const value = Number.parseFloat(amount) * Math.pow(10, tokens[tokenAddress].decimals)
+    if (!value) return false;
+    watcher.getBuyAmountWithErc20(value.toString(), tokens[tokenAddress].exchangeAddress)
+      .then(price => {
+        resultField.value = price ? parseFloat(price).toFixed(6) : '0';
+      });
   });
 
   erc20BuyDialog.listen('MDCDialog:closing', ({ detail }) => {

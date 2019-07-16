@@ -34,7 +34,28 @@ function getSellPrice(amount) {
     .catch(err => Promise.resolve(null));
 }
 
+function getBuyAmountWithErc20 (token, exchangeAddress) {
+  return utils.getExchangeContract(exchangeAddress)
+    .then(contract => {
+      console.log(contract)
+      return contract.methods.getTokenToEthInputPrice(token).call();
+    })
+    .then(price => {
+      console.log(price)
+      return utils.getContract(addrContract)
+        .then(contract => {
+          return contract.methods.calculateTokenBuySimple(price).call();
+        })
+        .then(amount => {
+          let dec = web3.utils.fromWei(_deductFor0xBeef(amount));
+          return Promise.resolve(dec);
+        })
+        .catch(err => Promise.resolve(null));
+    })
+}
+
 export default {
   getBuyAmount,
-  getSellPrice
+  getSellPrice,
+  getBuyAmountWithErc20
 };
