@@ -232,7 +232,7 @@
 
 <aside
   id="mdc-dialog-erc20-buy"
-  class="mdc-dialog"
+  class="mdc-dialog mdc-dialog--scrollable "
   role="alertdialog"
   aria-labelledby="my-mdc-dialog-label"
   aria-describedby="my-mdc-dialog-description"
@@ -276,9 +276,9 @@
           <br class="break-on-small-screen"><!--
           --> 買入
           <nobr class="--prevent-break">
-            <div class="--erc20BuyCowWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense mdc-text-field--with-leading-icon">
+            <div class="--erc20BuyCowAmountWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense mdc-text-field--with-leading-icon">
               <span class="material-icons mdc-text-field__icon">lock</span>
-              <input type="text" class="--erc20BuyCowField mdc-text-field__input mdc-typography--headline5" value="0" readonly>
+              <input type="text" class="--erc20BuyCowAmountField mdc-text-field__input mdc-typography--headline5" value="0" readonly>
               <div class="mdc-line-ripple"></div>
             </div>
           COW
@@ -301,6 +301,7 @@
       </footer>
     </div>
   </div>
+  <div class="mdc-dialog__scrim"></div>
 </aside>
 
 <aside id="my-mdc-dialog-prompt-sign"
