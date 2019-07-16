@@ -33,8 +33,34 @@ function getWeb3Instance() {
   return web3Instance;
 }
 
+function pollTransactionReceipt (transactionHash) {
+  const interval = 1000
+  const getTransactionReceiptPromise = transactionHash => {
+    return new Promise((resolve, reject) => {
+      web3Instance.eth.getTransactionReceipt(transactionHash, (err, receipt) => {
+        if (err) reject(err)
+        else resolve(receipt)
+      })
+    })
+  }
+
+  const checkCondition = (resolve, reject) => {
+    getTransactionReceiptPromise(transactionHash)
+      .then(receipt => {
+        if (receipt) {
+          resolve(receipt)
+        } else {
+          setTimeout(checkCondition, interval, resolve, reject)
+        }
+      })
+  }
+  
+  return new Promise(checkCondition)
+}
+
 export default {
   getMetaMaskProvider,
   getContract,
-  getWeb3Instance
+  getWeb3Instance,
+  pollTransactionReceipt
 };

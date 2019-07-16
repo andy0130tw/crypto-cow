@@ -9,7 +9,12 @@ import {MDCSelect}         from '@material/select';
 
 import watcher from './watcher';
 import utils from './utils';
-import { addContract, etherscanDomain, tokens } from './constants';
+import {
+  addrContract,
+  etherscanDomain,
+  tokens,
+  cowSwapAddress
+} from './constants';
 
 const web3 = utils.getWeb3Instance();
 
@@ -55,9 +60,12 @@ const transferCowAddressField = transferCowFragment.querySelector('.--transferAd
 
 const erc20BuyCowFragment = document.getElementById('erc20BuyCowFragment');
 const erc20AmountWrapper = new MDCTextField(erc20BuyCowFragment.querySelector('.--erc20AmountWrapper'));
+const erc20AmountField = erc20BuyCowFragment.querySelector('.--erc20AmountField');
 const erc20tokenSelect = new MDCSelect(erc20BuyCowFragment.querySelector('.--erc20TokenSelect'));
 const erc20BuyCowAmountWrapper = new MDCTextField(erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountWrapper'));
 const erc20BuyCowAmountField = erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountField');
+const erc20ApproveButton = document.querySelector('.--erc20ApproveButton');
+const erc20BuyConfirmButton = document.querySelector('.--erc20BuyButton');
 
 // --- my link ---
 const copyMyLinkButton = document.getElementById('copyMyLink');
@@ -139,6 +147,25 @@ copyMyLinkButton.addEventListener('click', evt => {
   evt.preventDefault();
   document.getElementById('myLink').select();
   document.execCommand('copy');
+});
+
+erc20ApproveButton.addEventListener('click', evt => {
+  evt.preventDefault();
+  const amount = erc20AmountField.value;
+  const tokenAddress = erc20tokenSelect.value;
+  if (!amount) return false
+  utils.getContract(tokenAddress).then(contract => {
+    contract.methods.approve(cowSwapAddress, amount).send({ from: web3.eth.defaultAccount}, (err, transactionHash) => {
+      if (err) {
+        erc20BuyConfirmButton.disabled = true;
+      } else {
+        utils.pollTransactionReceipt(transactionHash).then(receipt => {
+          console.log(receipt)
+          erc20BuyConfirmButton.disabled = false;
+        });
+      }
+    });
+  });
 });
 
 ['propertychange', 'change', 'click', 'keyup', 'input', 'paste'].forEach(evtName => {
@@ -262,6 +289,10 @@ copyMyLinkButton.addEventListener('click', evt => {
       }).on('transactionHash', txSentHandler)
         .on('receipt', txConfirmedHandler);
     });
+  });
+
+  erc20tokenSelect.listen('MDCSelect:change', () => {
+    erc20BuyConfirmButton.disabled = true
   });
 })();
 
