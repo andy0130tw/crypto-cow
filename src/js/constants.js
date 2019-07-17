@@ -1,6 +1,8 @@
 export const addrContract = '0xFDb0065240753FEF4880a9CC7876be59E09D78BB';
 export const cowSwapAddress = "0x84F84667dcD56091F289466A7dc0e2620b562e24";
+
 export const etherscanDomain = 'etherscan.io';
+export const biggestNumber = '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
 const NAME = 'name'
 const SYMBOL = 'symbol'

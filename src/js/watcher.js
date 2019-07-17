@@ -37,7 +37,6 @@ function getSellPrice(amount) {
 function getBuyAmountWithErc20 (token, exchangeAddress) {
   return utils.getExchangeContract(exchangeAddress)
     .then(contract => {
-      console.log(contract)
       return contract.methods.getTokenToEthInputPrice(token).call();
     })
     .then(price => {

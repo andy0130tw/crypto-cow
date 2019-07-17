@@ -203,3 +203,14 @@ body.loading .hide-when-loading {
     max-width: 900px;
   }
 }
+
+.--erc20ApproveStatus {
+  display: none;
+  color: #5D9431;
+  align-items: center;
+}
+
+.--erc20ApproveStatus > img {
+  width: 40px;
+  height: 40px;
+}

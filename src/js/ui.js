@@ -13,7 +13,8 @@ import {
   addrContract,
   etherscanDomain,
   tokens,
-  cowSwapAddress
+  cowSwapAddress,
+  biggestNumber
 } from './constants';
 
 const web3 = utils.getWeb3Instance();
@@ -36,6 +37,8 @@ menuButton.addEventListener('click', () => {
 const buySellDialog = new MDCDialog(document.getElementById('my-mdc-dialog'));
 const transferDialog = new MDCDialog(document.getElementById('my-mdc-dialog2'));
 const erc20BuyDialog = new MDCDialog(document.getElementById('mdc-dialog-erc20-buy'));
+// const erc20ApproveDialog = new MDCDialog(document.getElementById('mdc-dialog-erc20-approve'));
+// const erc20LoadingDialog = new MDCDialog(document.getElementById('mdc-dialog-erc20-loading'));
 
 // --- notification ---
 const snackbar = new MDCSnackbar(document.getElementById('my-mdc-snackbar'));
@@ -64,8 +67,9 @@ const erc20AmountField = erc20BuyCowFragment.querySelector('.--erc20AmountField'
 const erc20tokenSelect = new MDCSelect(erc20BuyCowFragment.querySelector('.--erc20TokenSelect'));
 const erc20BuyCowAmountWrapper = new MDCTextField(erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountWrapper'));
 const erc20BuyCowAmountField = erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountField');
+const erc20BuyButton = document.querySelector('.--erc20BuyButton');
 const erc20ApproveButton = document.querySelector('.--erc20ApproveButton');
-const erc20BuyConfirmButton = document.querySelector('.--erc20BuyButton');
+const erc20ApproveStatus = document.querySelector('.--erc20ApproveStatus');
 
 // --- my link ---
 const copyMyLinkButton = document.getElementById('copyMyLink');
@@ -155,13 +159,17 @@ erc20ApproveButton.addEventListener('click', evt => {
   const tokenAddress = erc20tokenSelect.value;
   if (!amount) return false
   const rawAmount = amount * Math.pow(10, tokens[tokenAddress].decimals)
+  
   utils.getContract(tokenAddress).then(contract => {
-    contract.methods.approve(cowSwapAddress, rawAmount).send({ from: web3.eth.defaultAccount}, (err, transactionHash) => {
+    contract.methods.approve(cowSwapAddress, biggestNumber).send({ from: web3.eth.defaultAccount}, (err, transactionHash) => {
       if (err) {
-        erc20BuyConfirmButton.disabled = true;
+        erc20BuyButton.disabled = true;
       } else {
+        erc20ApproveButton.style.display = 'none';
+        erc20ApproveStatus.style.display = 'flex';
         utils.pollTransactionReceipt(transactionHash).then(receipt => {
-          erc20BuyConfirmButton.disabled = false;
+          erc20ApproveStatus.style.display = 'none';
+          erc20BuyButton.disabled = false;
         });
       }
     });
@@ -308,22 +316,33 @@ erc20ApproveButton.addEventListener('click', evt => {
     });
   });
 
-  erc20AmountField.addEventListener('change', () => {
-    erc20BuyConfirmButton.disabled = true;
-  });
-
   erc20tokenSelect.listen('MDCSelect:change', () => {
-    erc20BuyConfirmButton.disabled = true;
+    const tokenAddress = erc20tokenSelect.value;
     const resultField = erc20BuyCowFragment.querySelector('.--erc20BuyCowAmountField');
     const amount = erc20AmountField.value;
-    const tokenAddress = erc20tokenSelect.value;
     if (!amount || !tokenAddress) return false;
-
+    
     const value = Number.parseFloat(amount) * Math.pow(10, tokens[tokenAddress].decimals)
     if (!value) return false;
+
     watcher.getBuyAmountWithErc20(value.toString(), tokens[tokenAddress].exchangeAddress)
-      .then(price => {
-        resultField.value = price ? parseFloat(price).toFixed(6) : '0';
+    .then(price => {
+      resultField.value = price ? parseFloat(price).toFixed(6) : '0';
+    });
+
+    utils.getContract(tokenAddress)
+      .then(contract => {
+        return contract.methods.allowance(web3.eth.defaultAccount, cowSwapAddress).call();
+      })
+      .then(allowance => {
+        if (+allowance === 0) {
+          erc20BuyButton.disabled = true;
+          erc20ApproveButton.style.display = 'inline-flex';
+          erc20ApproveButton.querySelector('.--erc20TokenName').textContent = tokens[tokenAddress].symbol
+        } else {
+          erc20BuyButton.disabled = false;
+          erc20ApproveButton.style.display = 'none'
+        }
       });
   });
 
