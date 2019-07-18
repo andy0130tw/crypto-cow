@@ -49,6 +49,13 @@
             <span class="mdc-list-item__secondary-text"></span>
           </span>
         </a>
+        <a id="menuERC20Buy" class="mdc-list-item" href="#">
+          <span class="material-icons mdc-list-item__graphic" aria-hidden="true">local_atm</span>
+          <span class="mdc-list-item__text --align-self-center">
+            <span class="mdc-list-item__primary-text">用 ERC20 買牛牛</span>
+            <span class="mdc-list-item__secondary-text"></span>
+          </span>
+        </a>
         <a id="menuSacrifice" class="mdc-list-item" href="#">
           <span class="material-icons mdc-list-item__graphic" aria-hidden="true">whatshot</span>
           <span class="mdc-list-item__text">
@@ -157,7 +164,7 @@
         </div>
 
         <div style="padding-top: 16px">
-          參考買入價格： 0.1 ETH = <span id="priceBuyInEth">???</span> COW，參考賣出價格： 1 COW = <span id="priceSellInEth">???</span> ETH
+          參考買入價格： 0.1 ETH = <span class="priceBuyInEth">???</span> COW，參考賣出價格： 1 COW = <span class="priceSellInEth">???</span> ETH
         </div>
       </section>
 
@@ -220,6 +227,77 @@
     </div>
   </div>
 
+  <div class="mdc-dialog__scrim"></div>
+</aside>
+
+<aside
+  id="mdc-dialog-erc20-buy"
+  class="mdc-dialog mdc-dialog--scrollable "
+  role="alertdialog"
+  aria-labelledby="my-mdc-dialog-label"
+  aria-describedby="my-mdc-dialog-description"
+>
+  <div class="mdc-dialog__container">
+    <div class="mdc-dialog__surface">
+      <h2 class="mdc-dialog__title">
+        用 ERC20 買牛牛
+      </h2>
+      <section class="mdc-dialog__content">
+        <div id="erc20BuyCowFragment" class="mdc-typography--headline5">
+          以
+          <nobr class="--prevent-break">
+            <div class="--erc20AmountWrapper mdc-text-field mdc-text-field--box">
+              <input type="text" class="--erc20AmountField mdc-text-field__input mdc-typography--headline5" pattern="\d*(\.\d*)?">
+              <div class="mdc-line-ripple"></div>
+            </div>
+          </nobr>
+          <nobr class="--prevent-break">
+            <div class="--erc20TokenSelect mdc-select">
+              <input type="hidden" name="enhanced-select">
+              <i class="mdc-select__dropdown-icon"></i>
+              <div class="mdc-select__selected-text"></div>
+              <div class="mdc-select__menu mdc-menu mdc-menu-surface width-96">
+                <ul class="mdc-list">
+                  <li class="mdc-list-item mdc-list-item--selected" data-value="" aria-selected="true">ERC20</li>
+                </ul>
+              </div>
+              <div class="mdc-line-ripple"></div>
+            </div>
+          </nobr>
+          <br class="break-on-small-screen"><!--
+          --> 買入
+          <nobr class="--prevent-break">
+            <div class="--erc20BuyCowAmountWrapper mdc-text-field mdc-text-field--box mdc-text-field--dense mdc-text-field--with-leading-icon">
+              <span class="material-icons mdc-text-field__icon">lock</span>
+              <input type="text" class="--erc20BuyCowAmountField mdc-text-field__input mdc-typography--headline5" value="0" readonly>
+              <div class="mdc-line-ripple"></div>
+            </div>
+          COW
+          </nobr>
+        </div>
+
+        <div class="--erc20BalanceStatus mdc-typography--subtitle1 mdc-theme--secondary" style="padding-top: 16px; display: none;">
+          你的餘額不夠喔！
+        </div>
+
+        <div class="mdc-typography--subtitle1" style="padding-top: 16px">
+          <button class="--erc20ApproveButton mdc-button mdc-button--raised mdc-typography--body1" style="display: none;">
+            解鎖
+            <span class="--erc20TokenName">...</span>
+          </button>
+          <div class="--erc20ApproveStatus mdc-typography--body1">
+            Pending...
+            <img src="assets/spinner.gif">
+          </div>
+        </div>
+      </section>
+
+      <footer class="mdc-dialog__actions">
+        <button type="button" class="mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__button" data-mdc-dialog-action="close">關閉</button>
+        <button type="button" class="--erc20BuyButton mdc-button mdc-button--_big mdc-typography--body1 mdc-dialog__button mdc-button--raised" data-mdc-dialog-action="accept" style="font-weight: bold" disabled>送出交易</button>
+      </footer>
+    </div>
+  </div>
   <div class="mdc-dialog__scrim"></div>
 </aside>
 
