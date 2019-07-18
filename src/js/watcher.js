@@ -40,7 +40,6 @@ function getBuyAmountWithErc20 (token, exchangeAddress) {
       return contract.methods.getTokenToEthInputPrice(token).call();
     })
     .then(price => {
-      console.log(price)
       return utils.getContract(addrContract)
         .then(contract => {
           return contract.methods.calculateTokenBuySimple(price).call();

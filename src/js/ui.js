@@ -70,6 +70,7 @@ const erc20BuyCowAmountField = erc20BuyCowFragment.querySelector('.--erc20BuyCow
 const erc20BuyButton = document.querySelector('.--erc20BuyButton');
 const erc20ApproveButton = document.querySelector('.--erc20ApproveButton');
 const erc20ApproveStatus = document.querySelector('.--erc20ApproveStatus');
+const erc20BalanceStatus = document.querySelector('.--erc20BalanceStatus');
 
 // --- my link ---
 const copyMyLinkButton = document.getElementById('copyMyLink');
@@ -117,6 +118,14 @@ function updateTokenSelectItems () {
   })
   const menuList = document.querySelector('.mdc-select__menu > .mdc-list')
   menuList.append(...items)
+}
+
+function checkBalanceIsSufficient (tokenAddress, price) {
+  return utils.getContract(tokenAddress).then(contract => {
+    return contract.methods.balanceOf(web3.eth.defaultAccount).call();
+  }).then(balance => {
+    return Number.parseInt(balance) > Number.parseInt(price)
+  })
 }
 
 document.getElementById('menuBuy').addEventListener('click', evt => {
@@ -232,6 +241,16 @@ erc20ApproveButton.addEventListener('click', evt => {
       .then(price => {
         resultField.value = price ? parseFloat(price).toFixed(6) : '0';
       });
+    
+    checkBalanceIsSufficient(tokenAddress, value).then(result => {
+      if (result) {
+        erc20BalanceStatus.style.display = 'none';
+        erc20BuyButton.disabled = false;
+      } else {
+        erc20BalanceStatus.style.display = 'block';
+        erc20BuyButton.disabled = true;
+      }
+    });
   });
 });
 
@@ -338,10 +357,19 @@ erc20ApproveButton.addEventListener('click', evt => {
         if (+allowance === 0) {
           erc20BuyButton.disabled = true;
           erc20ApproveButton.style.display = 'inline-flex';
+          erc20BalanceStatus.style.display = 'none';
           erc20ApproveButton.querySelector('.--erc20TokenName').textContent = tokens[tokenAddress].symbol
         } else {
-          erc20BuyButton.disabled = false;
           erc20ApproveButton.style.display = 'none'
+          checkBalanceIsSufficient(tokenAddress, value).then(result => {
+            if (result) {
+              erc20BalanceStatus.style.display = 'none';
+              erc20BuyButton.disabled = false;
+            } else {
+              erc20BalanceStatus.style.display = 'block';
+              erc20BuyButton.disabled = true
+            }
+          });
         }
       });
   });
