@@ -11,6 +11,7 @@ const babelify = require('babelify');
 const chalk = require('chalk');
 const exorcist = require('exorcist');
 const stream = require('stream');
+const browserSync = require('browser-sync').create();
 
 const uglify = require('gulp-uglify');
 
@@ -113,6 +114,15 @@ gulp.task('debug', () => {
   return bundle(b);
 });
 
+gulp.task('browser-sync', () => {
+  browserSync.init({
+    server: {
+      baseDir: "src/",
+    },
+    open: false,
+  });
+});
+
 gulp.task('build', () => {
   let b = getBrowserifyBase(false);
   return b.bundle()
@@ -124,4 +134,4 @@ gulp.task('build', () => {
   return bundle(b);
 });
 
-gulp.task('default', ['debug']);
+gulp.task('default', ['debug', 'browser-sync']);
