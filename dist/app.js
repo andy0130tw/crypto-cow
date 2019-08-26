@@ -6507,10 +6507,10 @@ var _ETH, _x960b236A07cf, _x0D8775F648430679A, _x107c4504cd79C5d, _x1F573D6Fb3F1
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-var addrContract = exports.addrContract = '0x7e81081c45ebf2fade91de90d7c180f1edfcf534';
-var cowSwapAddress = exports.cowSwapAddress = "0x14173d48b1602bb686f33cd40b4ca66535b980b2";
+var addrContract = exports.addrContract = '0xFDb0065240753FEF4880a9CC7876be59E09D78BB';
+var cowSwapAddress = exports.cowSwapAddress = "0x84F84667dcD56091F289466A7dc0e2620b562e24";
 
-var etherscanDomain = exports.etherscanDomain = 'ropsten.etherscan.io';
+var etherscanDomain = exports.etherscanDomain = 'etherscan.io';
 var biggestNumber = exports.biggestNumber = '115792089237316195423570985008687907853269984665640564039457584007913129639935';
 
 var NAME = 'name';
@@ -6729,16 +6729,17 @@ function setupMainScreen() {
         netId = _ref2[0],
         netName = _ref2[1];
 
-    // if (netId != 1) {  // main net
-    //   let richText = new PIXI.Text(`The contract is deployed on main net.\nPlease switch the network and refresh.`, textStyleFatal);
+    if (netId != 1) {
+      // main net
+      var _richText = new PIXI.Text('The contract is deployed on main net.\nPlease switch the network and refresh.', textStyleFatal);
 
-    //   richText.x = app.screen.width / 2;
-    //   richText.y = app.screen.height / 2;
-    //   richText.anchor.set(0.5);
-    //   app.stage.addChild(richText);
+      _richText.x = app.screen.width / 2;
+      _richText.y = app.screen.height / 2;
+      _richText.anchor.set(0.5);
+      app.stage.addChild(_richText);
 
-    //   return Promise.reject(null);
-    // }
+      return Promise.reject(null);
+    }
 
     return web3.eth.getAccounts().then(function (accList_) {
       if (accList_ && accList_.length || !ethProvider.enable) {
@@ -6764,12 +6765,12 @@ function setupMainScreen() {
     }, 500);
 
     if (accList[0] == null) {
-      var _richText = new PIXI.Text('No wallet address detected.\nYou may need to unlock your account.', textStyleFatal);
+      var _richText2 = new PIXI.Text('No wallet address detected.\nYou may need to unlock your account.', textStyleFatal);
 
-      _richText.x = app.screen.width / 2;
-      _richText.y = app.screen.height / 2;
-      _richText.anchor.set(0.5);
-      topStage.addChild(_richText);
+      _richText2.x = app.screen.width / 2;
+      _richText2.y = app.screen.height / 2;
+      _richText2.anchor.set(0.5);
+      topStage.addChild(_richText2);
 
       return Promise.reject(null);
     }
@@ -6812,13 +6813,13 @@ function setupMainScreen() {
         wordWrapWidth: window.innerWidth
       });
 
-      var _richText2 = new PIXI.Text('You have no cows :(\n(These 3 cows are for previewing)', tStyle);
-      _richText2.rotation = -Math.PI / 36;
-      _richText2.alpha = 0.3;
-      _richText2.x = app.screen.width / 2;
-      _richText2.y = app.screen.height / 2;
-      _richText2.anchor.set(0.5);
-      topStage.addChild(_richText2);
+      var _richText3 = new PIXI.Text('You have no cows :(\n(These 3 cows are for previewing)', tStyle);
+      _richText3.rotation = -Math.PI / 36;
+      _richText3.alpha = 0.3;
+      _richText3.x = app.screen.width / 2;
+      _richText3.y = app.screen.height / 2;
+      _richText3.anchor.set(0.5);
+      topStage.addChild(_richText3);
     }
 
     // capped at 300
